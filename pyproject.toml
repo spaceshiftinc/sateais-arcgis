@@ -1,0 +1,17 @@
+# Dev tooling only. This repository ships an ArcGIS Pro toolbox, not a PyPI
+# package, so there is no [project] table.
+
+[tool.ruff]
+line-length = 100
+# ArcGIS Pro 3.0 ships Python 3.9; the toolbox runs on every Pro 3.x.
+target-version = "py39"
+# A Python toolbox is Python with a different extension.
+extend-include = ["*.pyt"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
