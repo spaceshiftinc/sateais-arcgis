@@ -138,5 +138,5 @@ Add-in development needs Windows; the Python toolbox does not.
 |---|---|
 | ArcGIS Pro | 3.7 |
 | .NET | 10 |
-| Visual Studio | 2026 — or the .NET 10 SDK with the `Esri.ArcGISPro.Extensions30` NuGet package (SDK-only build not yet verified) |
+| Visual Studio | not required. The .NET 10 SDK plus the `Esri.ArcGISPro.Extensions30` NuGet build and package the add-in; CI does the same on a plain Windows runner |
 | Edge WebView2 | required by the Pro SDK |

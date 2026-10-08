@@ -1,0 +1,35 @@
+<ArcGIS defaultAssembly="SateAIs.AddIn.dll" defaultNamespace="SateAIs.AddIn" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <!-- The version attribute is stamped from Directory.Build.props at build time. -->
+  <AddInInfo id="{76a90f24-430d-463a-a5b0-4105c2305e4a}" version="0.0.0" desktopVersion="3.7">
+    <Name>SateAIs</Name>
+    <Description>Satellite SAR detection from ArcGIS Pro: ship, oil slick, building change and time-series change.</Description>
+    <Author>SpaceShift Inc.</Author>
+    <Company>SpaceShift Inc.</Company>
+    <Date>2026-10-01</Date>
+    <Subject>Framework</Subject>
+  </AddInInfo>
+  <modules>
+    <insertModule id="SateAIs_Module" className="SateAIsModule" autoLoad="false" caption="SateAIs">
+      <tabs>
+        <tab id="SateAIs_Tab" caption="SateAIs" keytip="SA">
+          <group refID="SateAIs_Group" />
+        </tab>
+      </tabs>
+      <groups>
+        <group id="SateAIs_Group" caption="SateAIs" appearsOnAddInTab="false" keytip="SG">
+          <button refID="SateAIs_ShowDockpane" size="large" />
+        </group>
+      </groups>
+      <controls>
+        <button id="SateAIs_ShowDockpane" caption="SateAIs" className="ShowDockpaneButton" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32" keytip="SP">
+          <tooltip heading="SateAIs">Open the SateAIs pane.<disabledText /></tooltip>
+        </button>
+      </controls>
+      <dockPanes>
+        <dockPane id="SateAIs_Dockpane" caption="SateAIs" className="Dockpane.SateAIsDockpaneViewModel" dock="group" dockWith="esri_core_projectDockPane">
+          <content className="Dockpane.SateAIsDockpaneView" />
+        </dockPane>
+      </dockPanes>
+    </insertModule>
+  </modules>
+</ArcGIS>

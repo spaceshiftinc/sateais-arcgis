@@ -1,0 +1,31 @@
+<UserControl x:Class="SateAIs.AddIn.Dockpane.SateAIsDockpaneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SateAIs.AddIn;component/Theme/Cosmic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel Background="{StaticResource Cosmic.Background}">
+        <!-- Brand bar -->
+        <Border DockPanel.Dock="Top" Background="{StaticResource Cosmic.BackgroundRaised}"
+                BorderBrush="{StaticResource Cosmic.Border}" BorderThickness="0,0,0,1" Padding="12,8">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="SPACESHIFT" FontWeight="Bold" FontSize="13" Foreground="{StaticResource Cosmic.Text}" VerticalAlignment="Center" />
+                <TextBlock Text="✦" Margin="14,0,8,0" Foreground="{StaticResource Cosmic.Accent}" VerticalAlignment="Center" />
+                <TextBlock Text="SateAIs" Foreground="{StaticResource Cosmic.TextMuted}" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding VersionLabel}" Margin="8,0,0,0" FontSize="11" Foreground="{StaticResource Cosmic.TextDim}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+        <TabControl Style="{StaticResource Cosmic.TabControl}">
+            <TabItem Header="Analysis" Style="{StaticResource Cosmic.TabItem}">
+                <TextBlock Margin="12" Text="Analysis — coming in the next build." Foreground="{StaticResource Cosmic.TextMuted}" />
+            </TabItem>
+            <TabItem Header="Jobs" Style="{StaticResource Cosmic.TabItem}">
+                <TextBlock Margin="12" Text="Jobs — coming in the next build." Foreground="{StaticResource Cosmic.TextMuted}" />
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

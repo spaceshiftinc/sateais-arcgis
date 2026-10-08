@@ -4,9 +4,14 @@ Run SateAIs satellite SAR detection from ArcGIS Pro — ship, oil slick, new
 building, disappeared building and time-series change — as ordinary
 geoprocessing tools.
 
-This is a **Python toolbox** (`.pyt`). Its tools appear in the Geoprocessing
-pane, can be chained in ModelBuilder, run as a batch over many areas, and be
-called from the Python window.
+Two surfaces share this repository:
+
+- a **Python toolbox** (`sateais_arcgis/`, `.pyt`) whose tools appear in the
+  Geoprocessing pane, chain in ModelBuilder, run as a batch over many areas and
+  can be called from the Python window — ready to use;
+- a **.NET add-in** (`src/`, `.esriAddinX`) with a dockpane that reproduces the
+  QGIS plugin's interactive workflow — in development, see
+  [docs/PORTING.md](docs/PORTING.md).
 
 ## Requirements
 
@@ -62,8 +67,12 @@ many areas; load the result later with `Download Result`.
 ## Development
 
 ```bash
-# tests (no ArcGIS Pro required — arcpy is stubbed in tests/conftest.py)
+# Python tests (no ArcGIS Pro required — arcpy is stubbed in tests/conftest.py)
 uv run --no-project --with pytest python -m pytest tests -q
+
+# .NET: the Core library and its tests build anywhere; the add-in builds on Windows
+dotnet test tests/SateAIs.Core.Tests
+dotnet build src/SateAIs.AddIn -c Release   # produces bin/Release/SateAIs.AddIn.esriAddinX
 
 # lint / format, same pin as CI
 uv run --no-project --with ruff==0.15.21 ruff check .
@@ -72,7 +81,10 @@ uv run --no-project --with ruff==0.15.21 ruff format --check .
 
 `sateais_arcgis/core/api/`, `wording.py`, `job_summary.py` and
 `result_stats.py` started as copies from
-[sateais-qgis](https://github.com/spaceshiftinc/sateais-qgis).
+[sateais-qgis](https://github.com/spaceshiftinc/sateais-qgis); the C# in
+`src/SateAIs.Core` reproduces them. `contract/wording-cases.json` pins every
+user-facing sentence and rounding rule, and both the Python and the C# tests
+read it.
 
 **Their behaviour is kept in step; the files are not kept byte-identical.** A
 fix to what one of them *does* belongs in both. Comments and docstrings may

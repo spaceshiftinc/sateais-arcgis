@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The ArcGIS Pro add-in. Built with the .NET SDK alone: the Esri NuGet supplies the
+       references (its own build targets need Visual Studio's MSBuild, so they are excluded)
+       and the PackageAddIn target below produces the .esriAddinX. When ArcGIS Pro is present
+       the package is also installed for the current user. -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>SateAIs.AddIn</AssemblyName>
+    <RootNamespace>SateAIs.AddIn</RootNamespace>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <ProAppBin>C:\Program Files\ArcGIS\Pro\bin\</ProAppBin>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Config.daml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Esri.ArcGISPro.Extensions30" Version="3.7.0.1901" ExcludeAssets="build" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SateAIs.Core\SateAIs.Core.csproj" />
+  </ItemGroup>
+
+  <Target Name="PackageAddIn" AfterTargets="Build">
+    <PropertyGroup>
+      <AddInStaging>$(IntermediateOutputPath)addin\</AddInStaging>
+      <AddInPackage>$(OutDir)$(AssemblyName).esriAddinX</AddInPackage>
+    </PropertyGroup>
+    <ItemGroup>
+      <AddInBinaries Include="$(OutDir)**\*.dll;$(OutDir)**\*.pdb;$(OutDir)**\*.deps.json" />
+    </ItemGroup>
+    <RemoveDir Directories="$(AddInStaging)" />
+    <Copy SourceFiles="Config.daml" DestinationFolder="$(AddInStaging)" />
+    <!-- The version lives in Directory.Build.props; stamp it into the manifest here. -->
+    <XmlPoke XmlInputPath="$(AddInStaging)Config.daml" Query="/x:ArcGIS/x:AddInInfo/@version" Value="$(Version)" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/DADF/Registry' /&gt;" />
+    <Copy SourceFiles="@(AddInBinaries)" DestinationFiles="@(AddInBinaries->'$(AddInStaging)Install\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Delete Files="$(AddInPackage)" />
+    <ZipDirectory SourceDirectory="$(AddInStaging)" DestinationFile="$(AddInPackage)" />
+    <Message Importance="High" Text="Packaged $(AddInPackage)" />
+    <Exec Condition="Exists('$(ProAppBin)RegisterAddIn.exe')" Command="&quot;$(ProAppBin)RegisterAddIn.exe&quot; &quot;$(AddInPackage)&quot; /s" IgnoreExitCode="true" />
+  </Target>
+
+</Project>
