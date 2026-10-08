@@ -15,6 +15,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <ProAppBin>C:\Program Files\ArcGIS\Pro\bin\</ProAppBin>
+    <!-- Lets the WPF project compile on macOS/Linux too; it only runs on Windows. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <ItemGroup>

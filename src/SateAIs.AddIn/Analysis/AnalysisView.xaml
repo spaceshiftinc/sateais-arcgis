@@ -1,0 +1,337 @@
+<UserControl x:Class="SateAIs.AddIn.Analysis.AnalysisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SateAIs.AddIn">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SateAIs.AddIn;component/Theme/Cosmic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SateAIs.AddIn;component/Theme/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <local:InverseBoolToVisibilityConverter x:Key="InverseBoolToVis" />
+            <local:HexToBrushConverter x:Key="HexToBrush" />
+            <local:IconKeyConverter x:Key="IconKey" />
+            <local:StatusKindToBrushConverter x:Key="StatusBrush" />
+
+            <!-- A 16 px icon drawn from a 24-unit geometry -->
+            <Style x:Key="IconPath" TargetType="Path">
+                <Setter Property="StrokeThickness" Value="1.6" />
+                <Setter Property="StrokeLineJoin" Value="Round" />
+                <Setter Property="StrokeStartLineCap" Value="Round" />
+                <Setter Property="StrokeEndLineCap" Value="Round" />
+                <Setter Property="Fill" Value="Transparent" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource Cosmic.Background}">
+
+        <!-- Welcome: no API key yet -->
+        <StackPanel Margin="24,32,24,24" Visibility="{Binding HasApiKey, Converter={StaticResource InverseBoolToVis}}">
+            <TextBlock Text="Welcome to SateAIs" Style="{StaticResource Cosmic.Title}" />
+            <TextBlock Style="{StaticResource Cosmic.Subtitle}" Margin="0,12,0,0"
+                       Text="Run SAR satellite detections — ships, oil slicks, building changes — right from ArcGIS Pro, and get the results back as map layers." />
+            <TextBlock Style="{StaticResource Cosmic.Hint}" Margin="0,12,0,0"
+                       Text="1.  Create a free account — new accounts include welcome credits&#x0a;2.  Copy your API key and paste it into Settings&#x0a;3.  Draw an area on the map and submit your first analysis" />
+            <Button Content="Create a free account →" Style="{StaticResource Cosmic.PrimaryButton}" Margin="0,20,0,0" Command="{Binding CreateAccountCommand}" />
+            <Button Content="I already have an API key — open Settings" Style="{StaticResource Cosmic.GhostButton}" Margin="0,12,0,0" Command="{Binding OpenSettingsCommand}" />
+        </StackPanel>
+
+        <!-- Form -->
+        <DockPanel Visibility="{Binding HasApiKey, Converter={StaticResource BoolToVis}}">
+
+            <!-- Balance footer -->
+            <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource Cosmic.SurfaceRaised}" BorderThickness="0,1,0,0" Padding="10,8"
+                    Visibility="{Binding BalanceVisible, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="Credits" Style="{StaticResource Cosmic.Section}" />
+                    <Grid Margin="0,2,0,0">
+                        <TextBlock HorizontalAlignment="Left">
+                            <Run Text="{Binding BalanceText, Mode=OneWay}" FontFamily="{StaticResource Cosmic.FontFamilyMono}" FontSize="14" Foreground="{StaticResource Cosmic.Text}" />
+                            <Run Text=" available" FontFamily="{StaticResource Cosmic.FontFamily}" FontSize="11.5" Foreground="{StaticResource Cosmic.TextMuted}" />
+                        </TextBlock>
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource Cosmic.FontFamily}" FontSize="11.5"
+                                   Visibility="{Binding AfterVisible, Converter={StaticResource BoolToVis}}">
+                            <Run Text="after this run " Foreground="{StaticResource Cosmic.TextDim}" />
+                            <Run Text="{Binding AfterText, Mode=OneWay}" Foreground="{Binding AfterKind, Converter={StaticResource StatusBrush}}" />
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="12">
+
+                    <!-- Setup card -->
+                    <Border Style="{StaticResource Cosmic.Card}" Padding="14,12,14,14">
+                        <StackPanel>
+                            <TextBlock Text="Set up the analysis" Style="{StaticResource Cosmic.Subtitle}" Foreground="{StaticResource Cosmic.Text}" Margin="0,0,0,6" />
+
+                            <!-- ① Detection type -->
+                            <Button Style="{StaticResource Cosmic.StepRow}" Command="{Binding ToggleKindCommand}">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Left">
+                                        <Border.Style>
+                                            <Style TargetType="Border" BasedOn="{StaticResource Cosmic.StepBadge}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding KindDone}" Value="True">
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Success}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="1" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource Cosmic.TextMuted}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding KindDone}" Value="True">
+                                                            <Setter Property="Text" Value="✓" />
+                                                            <Setter Property="Foreground" Value="{StaticResource Cosmic.Success}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                    <Viewbox Width="16" Height="16" Margin="8,0,0,0" DockPanel.Dock="Left">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Style="{StaticResource IconPath}" Data="{Binding KindIcon, Converter={StaticResource IconKey}}" Stroke="{Binding KindIconColor, Converter={StaticResource HexToBrush}}" />
+                                            <Path Style="{StaticResource IconPath}" Data="{Binding KindIcon, Converter={StaticResource IconKey}, ConverterParameter=.dashed}" Stroke="{Binding KindIconColor, Converter={StaticResource HexToBrush}}" StrokeDashArray="3 3" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding KindValue}" Style="{StaticResource Cosmic.StepValue}" DockPanel.Dock="Right" Margin="8,0,0,0" />
+                                    <TextBlock Text="Detection type" Style="{StaticResource Cosmic.StepLabel}" Margin="8,0,0,0" />
+                                </DockPanel>
+                            </Button>
+                            <ItemsControl ItemsSource="{Binding Types}" Margin="33,2,4,10" Visibility="{Binding IsKindOpen, Converter={StaticResource BoolToVis}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource Cosmic.StepOption}" Margin="0,1"
+                                                Command="{Binding DataContext.ChooseTypeCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Id}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                                    <Canvas Width="24" Height="24">
+                                                        <Path Style="{StaticResource IconPath}" Data="{Binding Id, Converter={StaticResource IconKey}}" Stroke="{Binding Color, Converter={StaticResource HexToBrush}}" />
+                                                        <Path Style="{StaticResource IconPath}" Data="{Binding Id, Converter={StaticResource IconKey}, ConverterParameter=.dashed}" Stroke="{Binding Color, Converter={StaticResource HexToBrush}}" StrokeDashArray="3 3" />
+                                                    </Canvas>
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- ② Period / Reference date -->
+                            <Button Style="{StaticResource Cosmic.StepRow}" Command="{Binding ToggleWhenCommand}" IsEnabled="{Binding WhenReachable}">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Left">
+                                        <Border.Style>
+                                            <Style TargetType="Border" BasedOn="{StaticResource Cosmic.StepBadge}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding WhenDone}" Value="True">
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Success}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="2" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource Cosmic.TextMuted}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding WhenDone}" Value="True">
+                                                            <Setter Property="Text" Value="✓" />
+                                                            <Setter Property="Foreground" Value="{StaticResource Cosmic.Success}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                    <Viewbox Width="16" Height="16" Margin="8,0,0,0" DockPanel.Dock="Left">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Style="{StaticResource IconPath}" Data="{StaticResource Icon.calendar}" Stroke="{StaticResource Cosmic.TextMuted}" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding WhenValue}" Style="{StaticResource Cosmic.StepValue}" DockPanel.Dock="Right" Margin="8,0,0,0" />
+                                    <TextBlock Text="{Binding WhenLabel}" Margin="8,0,0,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource Cosmic.StepLabel}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding WhenReachable}" Value="False">
+                                                        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextFaint}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DockPanel>
+                            </Button>
+                            <StackPanel Margin="33,2,4,10" Visibility="{Binding IsWhenOpen, Converter={StaticResource BoolToVis}}">
+                                <!-- period types -->
+                                <StackPanel Visibility="{Binding NeedsPeriod, Converter={StaticResource BoolToVis}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <DatePicker SelectedDate="{Binding DateStart}" Style="{StaticResource Cosmic.DatePicker}" Width="118" />
+                                        <TextBlock Text="→" Style="{StaticResource Cosmic.Hint}" Margin="6,0" VerticalAlignment="Center" />
+                                        <DatePicker SelectedDate="{Binding DateEnd}" Style="{StaticResource Cosmic.DatePicker}" Width="118" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                        <Button Content="12 months" Style="{StaticResource Cosmic.Preset}" Command="{Binding PresetCommand}" CommandParameter="12" Margin="0,0,5,0" />
+                                        <Button Content="2 years" Style="{StaticResource Cosmic.Preset}" Command="{Binding PresetCommand}" CommandParameter="24" Margin="0,0,5,0" />
+                                        <Button Content="5 years" Style="{StaticResource Cosmic.Preset}" Command="{Binding PresetCommand}" CommandParameter="60" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <!-- single-date types -->
+                                <StackPanel Visibility="{Binding NeedsPeriod, Converter={StaticResource InverseBoolToVis}}">
+                                    <DatePicker SelectedDate="{Binding Date}" Style="{StaticResource Cosmic.DatePicker}" Width="118" HorizontalAlignment="Left" />
+                                    <TextBlock Text="No scene on that exact date? Pick a side." Style="{StaticResource Cosmic.StepHint}" Margin="0,6,0,0" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
+                                                ToolTip="Satellites revisit every few days, so an exact-date scene is rare.&#x0a;Nearest: closest either way · Before / After: only that side.">
+                                        <RadioButton Content="Nearest" GroupName="scene" Style="{StaticResource Cosmic.SegButtonFirst}" IsChecked="{Binding IsNearest}" />
+                                        <RadioButton Content="Before only" GroupName="scene" Style="{StaticResource Cosmic.SegButton}" IsChecked="{Binding IsBefore}" />
+                                        <RadioButton Content="After only" GroupName="scene" Style="{StaticResource Cosmic.SegButtonLast}" IsChecked="{Binding IsAfter}" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Text="Pass direction — leave as Any unless you know." Style="{StaticResource Cosmic.StepHint}" Margin="0,8,0,0" />
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
+                                            ToolTip="Which way the satellite was travelling.&#x0a;Ascending flies south to north, descending north to south;&#x0a;the viewing angle differs, so fixing one keeps a series consistent.">
+                                    <RadioButton Content="Any orbit" GroupName="orbit" Style="{StaticResource Cosmic.SegButtonFirst}" IsChecked="{Binding IsAnyOrbit}" />
+                                    <RadioButton Content="Ascending" GroupName="orbit" Style="{StaticResource Cosmic.SegButton}" IsChecked="{Binding IsAscending}" />
+                                    <RadioButton Content="Descending" GroupName="orbit" Style="{StaticResource Cosmic.SegButtonLast}" IsChecked="{Binding IsDescending}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- ③ Area -->
+                            <Button Style="{StaticResource Cosmic.StepRow}" Command="{Binding ToggleAreaCommand}">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Left">
+                                        <Border.Style>
+                                            <Style TargetType="Border" BasedOn="{StaticResource Cosmic.StepBadge}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AreaDone}" Value="True">
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Success}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="3" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource Cosmic.TextMuted}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AreaDone}" Value="True">
+                                                            <Setter Property="Text" Value="✓" />
+                                                            <Setter Property="Foreground" Value="{StaticResource Cosmic.Success}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                    <Viewbox Width="16" Height="16" Margin="8,0,0,0" DockPanel.Dock="Left">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Style="{StaticResource IconPath}" Data="{StaticResource Icon.draw}" Stroke="{StaticResource Cosmic.TextMuted}" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="10,0,0,0"
+                                                Visibility="{Binding AreaDone, Converter={StaticResource BoolToVis}}">
+                                        <Button Content="Redraw" Style="{StaticResource Cosmic.LinkButton}" Command="{Binding RedrawCommand}" />
+                                        <Button Content="Clear" Style="{StaticResource Cosmic.LinkButtonMuted}" Command="{Binding ClearPolygonCommand}" Margin="10,0,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding AreaValue}" Style="{StaticResource Cosmic.StepValue}" DockPanel.Dock="Right" Margin="8,0,0,0" />
+                                    <TextBlock Text="{Binding AreaLabel}" Style="{StaticResource Cosmic.StepLabel}" Margin="8,0,0,0" />
+                                </DockPanel>
+                            </Button>
+                            <Grid Margin="33,2,4,6" Visibility="{Binding IsAreaOpen, Converter={StaticResource BoolToVis}}">
+                                <TextBox x:Name="PolygonEdit" Style="{StaticResource Cosmic.PolygonEdit}" Text="{Binding PolygonText, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="POLYGON((lon lat, ...))" FontFamily="{StaticResource Cosmic.FontFamilyMono}" FontSize="11" Foreground="{StaticResource Cosmic.TextDim}"
+                                           Margin="13,8,0,0" IsHitTestVisible="False">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Text, ElementName=PolygonEdit}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Estimate card -->
+                    <Border Style="{StaticResource Cosmic.Card}" Padding="16,14,16,16" Margin="0,12,0,0"
+                            Visibility="{Binding EstimateVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Note}" Style="{StaticResource Cosmic.Hint}" Foreground="{Binding NoteKind, Converter={StaticResource StatusBrush}}"
+                                       Visibility="{Binding NoteVisible, Converter={StaticResource BoolToVis}}" />
+                            <Grid Margin="0,8,0,0" Visibility="{Binding CreditsVisible, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Visibility="{Binding CreditsIsUpTo, Converter={StaticResource BoolToVis}}">
+                                    <Run Text="up to " FontSize="11.5" Foreground="{StaticResource Cosmic.TextMuted}" FontFamily="{StaticResource Cosmic.FontFamily}" />
+                                    <Run Text="{Binding CreditsNumber, Mode=OneWay}" FontSize="15" FontFamily="{StaticResource Cosmic.FontFamilyMono}" Foreground="{StaticResource Cosmic.Text}" />
+                                    <Run Text=" credits" FontSize="11.5" Foreground="{StaticResource Cosmic.TextMuted}" FontFamily="{StaticResource Cosmic.FontFamily}" />
+                                </TextBlock>
+                                <TextBlock Text="{Binding CreditsText}" Style="{StaticResource Cosmic.Text.Base}" Visibility="{Binding CreditsIsUpTo, Converter={StaticResource InverseBoolToVis}}" />
+                            </Grid>
+                            <ProgressBar Value="{Binding MeterValue, Mode=OneWay}" Maximum="100" Margin="0,8,0,0" Visibility="{Binding MeterVisible, Converter={StaticResource BoolToVis}}">
+                                <ProgressBar.Style>
+                                    <Style TargetType="ProgressBar" BasedOn="{StaticResource Cosmic.Meter}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding MeterPartial}" Value="True">
+                                                <Setter Property="Foreground" Value="{StaticResource Cosmic.Warning}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ProgressBar.Style>
+                            </ProgressBar>
+                            <Border BorderBrush="{StaticResource Cosmic.Border}" BorderThickness="0,1,0,0" Margin="0,10,0,0" Padding="0,10,0,0"
+                                    Visibility="{Binding LegendVisible, Converter={StaticResource BoolToVis}}">
+                                <WrapPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,6">
+                                        <Line X1="1" Y1="6" X2="19" Y2="6" Stroke="#E68FA0AD" StrokeThickness="2" StrokeDashArray="3 2" Width="20" Height="12" VerticalAlignment="Center" />
+                                        <TextBlock Text="Requested" Style="{StaticResource Cosmic.Hint}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,6" Visibility="{Binding LegendAnalysed, Converter={StaticResource BoolToVis}}">
+                                        <Rectangle Width="18" Height="10" Fill="#2E009FE8" Stroke="#DC009FE8" StrokeThickness="1" VerticalAlignment="Center" />
+                                        <TextBlock Text="Covered" Style="{StaticResource Cosmic.Hint}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,6" Visibility="{Binding LegendUncovered, Converter={StaticResource BoolToVis}}">
+                                        <Rectangle Width="18" Height="10" Fill="#307C8A94" Stroke="#AA7C8A94" StrokeThickness="1" VerticalAlignment="Center" />
+                                        <TextBlock Text="Not covered" Style="{StaticResource Cosmic.Hint}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </WrapPanel>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0" Visibility="{Binding EstimateBusy, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="✦" Foreground="{StaticResource Cosmic.Accent}" FontSize="14" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <TextBlock.RenderTransform>
+                                        <RotateTransform x:Name="BusySpin" />
+                                    </TextBlock.RenderTransform>
+                                    <TextBlock.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation Storyboard.TargetName="BusySpin" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="0:0:3" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </TextBlock.Triggers>
+                                </TextBlock>
+                                <TextBlock Text="Checking coverage and cost…" Style="{StaticResource Cosmic.Hint}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Status, progress, submit -->
+                    <TextBlock Text="{Binding StatusText}" Style="{StaticResource Cosmic.Hint}" FontSize="12.5" Margin="0,12,0,0"
+                               Foreground="{Binding StatusKind, Converter={StaticResource StatusBrush}}" />
+                    <ProgressBar IsIndeterminate="True" Style="{StaticResource Cosmic.Meter}" Margin="0,8,0,0"
+                                 Visibility="{Binding Submitting, Converter={StaticResource BoolToVis}}" />
+                    <Button Content="Submit" Style="{StaticResource Cosmic.PrimaryButton}" HorizontalAlignment="Right" Margin="0,12,0,0"
+                            Command="{Binding SubmitCommand}" IsDefault="True" />
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</UserControl>

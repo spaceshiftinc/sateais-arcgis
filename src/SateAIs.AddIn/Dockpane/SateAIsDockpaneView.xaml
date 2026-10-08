@@ -1,6 +1,7 @@
 <UserControl x:Class="SateAIs.AddIn.Dockpane.SateAIsDockpaneView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:analysis="clr-namespace:SateAIs.AddIn.Analysis">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,7 +22,7 @@
         </Border>
         <TabControl Style="{StaticResource Cosmic.TabControl}">
             <TabItem Header="Analysis" Style="{StaticResource Cosmic.TabItem}">
-                <TextBlock Margin="12" Text="Analysis — coming in the next build." Foreground="{StaticResource Cosmic.TextMuted}" />
+                <analysis:AnalysisView DataContext="{Binding Analysis}" />
             </TabItem>
             <TabItem Header="Jobs" Style="{StaticResource Cosmic.TabItem}">
                 <TextBlock Margin="12" Text="Jobs — coming in the next build." Foreground="{StaticResource Cosmic.TextMuted}" />
