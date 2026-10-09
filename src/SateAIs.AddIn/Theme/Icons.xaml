@@ -43,6 +43,15 @@
         <PathGeometry Figures="M3.5 10h17" />
         <PathGeometry Figures="M8 3v4M16 3v4" />
     </GeometryGroup>
+    <!-- The spark from the SPACESHIFT wordmark, filled rather than stroked. Marks a find. -->
+    <GeometryGroup x:Key="Icon.spark" FillRule="Nonzero">
+        <GeometryGroup.Transform>
+            <TranslateTransform X="-160" Y="-52" />
+        </GeometryGroup.Transform>
+        <PathGeometry Figures="M173.9,55.9 L169.4,55.9 L171.6,52 Z M173.9,71.6 L169.4,71.6 L171.6,75.5 Z M171,55.6 L166.9,57.1 L167.6,52.7 Z M176.4,70.4 L172.2,71.9 L175.7,74.8 Z M168.3,56.3 L164.9,59.1 L164.1,54.7 Z M178.4,68.3 L175,71.2 L179.2,72.7 Z M165.9,57.9 L163.7,61.7 L161.5,57.9 Z M179.6,65.7 L177.3,69.6 L181.8,69.6 Z M164.3,60.2 L163.5,64.6 L160.1,61.7 Z M179.8,62.9 L179,67.3 L183.2,65.8 Z M163.5,62.9 L164.3,67.3 L160.1,65.8 Z M179,60.2 L179.8,64.6 L183.2,61.7 Z M163.7,65.7 L165.9,69.6 L161.5,69.6 Z M177.3,57.9 L179.6,61.7 L181.8,57.9 Z M164.9,68.3 L168.3,71.2 L164.1,72.7 Z M175,56.3 L178.4,59.1 L179.2,54.7 Z M166.9,70.4 L171,71.9 L167.6,74.8 Z M172.2,55.6 L176.4,57.1 L175.7,52.7 Z" />
+        <EllipseGeometry Center="171.6,63.6" RadiusX="8.4" RadiusY="8.4" />
+    </GeometryGroup>
+
     <GeometryGroup x:Key="Icon.draw">
         <PathGeometry Figures="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8" />
         <PathGeometry Figures="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8" />
