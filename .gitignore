@@ -5,3 +5,10 @@ __pycache__/
 .mypy_cache/
 dist/
 .DS_Store
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/

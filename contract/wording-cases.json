@@ -1,0 +1,876 @@
+{
+  "_about": "User-facing wording shared by the SateAIs clients. Generated from the Python implementation; every client's tests read this file. Change a sentence here and in every implementation, or in none.",
+  "credits_label": [
+    {
+      "args": [
+        257.38
+      ],
+      "expected": "up to 257.38 credits"
+    },
+    {
+      "args": [
+        1234.5
+      ],
+      "expected": "up to 1,234.50 credits"
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": "No credits for this analysis."
+    },
+    {
+      "args": [
+        null
+      ],
+      "expected": "Cost is known only after it runs."
+    },
+    {
+      "args": [
+        0.004
+      ],
+      "expected": "up to 0.00 credits"
+    },
+    {
+      "args": [
+        2.5
+      ],
+      "expected": "up to 2.50 credits"
+    }
+  ],
+  "coverage_label": [
+    {
+      "args": [
+        1.0,
+        false
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        1.0,
+        true
+      ],
+      "expected": "All of your area was analysed"
+    },
+    {
+      "args": [
+        0.897,
+        false
+      ],
+      "expected": "89% covered"
+    },
+    {
+      "args": [
+        0.66,
+        true
+      ],
+      "expected": "Only 66% of your area was analysed"
+    },
+    {
+      "args": [
+        null,
+        false
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        null,
+        true
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        0.999,
+        false
+      ],
+      "expected": "99% covered"
+    },
+    {
+      "args": [
+        1.2,
+        true
+      ],
+      "expected": "All of your area was analysed"
+    },
+    {
+      "args": [
+        0.0,
+        false
+      ],
+      "expected": "0% covered"
+    }
+  ],
+  "coverage_is_partial": [
+    {
+      "args": [
+        0.5
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        1.0
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        null
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        0.999
+      ],
+      "expected": true
+    }
+  ],
+  "balance_note": [
+    {
+      "args": [
+        false,
+        120.4
+      ],
+      "expected": "balance 120.40"
+    },
+    {
+      "args": [
+        true,
+        10963330.9
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        null,
+        10.0
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        false,
+        null
+      ],
+      "expected": ""
+    }
+  ],
+  "area_km2_label": [
+    {
+      "args": [
+        38.29
+      ],
+      "expected": "38.29 km²"
+    },
+    {
+      "args": [
+        30000
+      ],
+      "expected": "30,000 km²"
+    },
+    {
+      "args": [
+        100
+      ],
+      "expected": "100 km²"
+    },
+    {
+      "args": [
+        99.999
+      ],
+      "expected": "100.00 km²"
+    },
+    {
+      "args": [
+        0.5
+      ],
+      "expected": "0.50 km²"
+    },
+    {
+      "args": [
+        1234.567
+      ],
+      "expected": "1,235 km²"
+    }
+  ],
+  "took_label": [
+    {
+      "args": [
+        "2026-09-01T04:22:52.74747Z",
+        "2026-09-01T04:25:52.74747Z"
+      ],
+      "expected": "3m 0s"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.74747Z",
+        "2026-09-01T04:23:22.747470Z"
+      ],
+      "expected": "30s"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.74747Z",
+        "2026-09-01T05:27:52Z"
+      ],
+      "expected": "1h 4m"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52Z",
+        "2026-09-01T04:22:00Z"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        null,
+        "2026-09-01T04:22:52.74747Z"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.74747Z",
+        null
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "garbage",
+        "2026-09-01T04:22:52.74747Z"
+      ],
+      "expected": ""
+    }
+  ],
+  "format_credits": [
+    {
+      "args": [
+        126.9612
+      ],
+      "expected": "126.96"
+    },
+    {
+      "args": [
+        1234.5
+      ],
+      "expected": "1,234.50"
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": "0.00"
+    }
+  ],
+  "job_meta_fields": [
+    {
+      "args": [
+        "2026-09-03 12:00",
+        196.4,
+        1.96,
+        "3m 31s"
+      ],
+      "expected": [
+        [
+          "Submitted",
+          "2026-09-03 12:00"
+        ],
+        [
+          "Area",
+          "196 km²"
+        ],
+        [
+          "Cost",
+          "1.96 credits"
+        ],
+        [
+          "Took",
+          "3m 31s"
+        ]
+      ]
+    },
+    {
+      "args": [
+        "2026-09-03 12:00",
+        null,
+        null,
+        ""
+      ],
+      "expected": [
+        [
+          "Submitted",
+          "2026-09-03 12:00"
+        ]
+      ]
+    },
+    {
+      "args": [
+        "x",
+        null,
+        0,
+        ""
+      ],
+      "expected": [
+        [
+          "Submitted",
+          "x"
+        ],
+        [
+          "Cost",
+          "free"
+        ]
+      ]
+    },
+    {
+      "args": [
+        "",
+        12.345,
+        0.5,
+        "30s"
+      ],
+      "expected": [
+        [
+          "Area",
+          "12.35 km²"
+        ],
+        [
+          "Cost",
+          "0.50 credits"
+        ],
+        [
+          "Took",
+          "30s"
+        ]
+      ]
+    }
+  ],
+  "area_limit_reason": [
+    {
+      "args": [
+        "Polygon area (52.6 km²) exceeds 50 km² limit for endpoint 'timeseries'"
+      ],
+      "expected": "This area is 52.6 km², over the 50 km² limit for this analysis. Draw a smaller area, or split it into several runs."
+    },
+    {
+      "args": [
+        "Polygon area (31,204.9 km²) exceeds 30,000 km² limit for endpoint 'newbuilding'"
+      ],
+      "expected": "This area is 31,204.9 km², over the 30,000 km² limit for this analysis. Draw a smaller area, or split it into several runs."
+    },
+    {
+      "args": [
+        "Invalid WKT"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        null
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "date_start must be before date_end"
+      ],
+      "expected": ""
+    }
+  ],
+  "failure_label": [
+    {
+      "args": [
+        "GONE",
+        null
+      ],
+      "expected": "This result was deleted after the 30-day retention period. Run the analysis again to get it back."
+    },
+    {
+      "args": [
+        null,
+        "Result expired: retention period elapsed"
+      ],
+      "expected": "This result was deleted after the 30-day retention period. Run the analysis again to get it back."
+    },
+    {
+      "args": [
+        "VALIDATION_ERROR",
+        "Polygon area (52.6 km²) exceeds 50 km² limit for endpoint 'timeseries'"
+      ],
+      "expected": "This area is 52.6 km², over the 50 km² limit for this analysis. Draw a smaller area, or split it into several runs."
+    },
+    {
+      "args": [
+        null,
+        "Invalid ASF scene_id format (path traversal guard): 'S1A_IW_SLC__1SDV_20260101T000000'"
+      ],
+      "expected": "That scene is an SLC product. Ship detection needs a GRD scene — its name contains _IW_GRDH_."
+    },
+    {
+      "args": [
+        null,
+        "Invalid scene_id format: 'FOO'"
+      ],
+      "expected": "That scene name is not a Sentinel-1 GRD granule. Look it up on ASF Search with File Type set to GRD."
+    },
+    {
+      "args": [
+        "SCENE_NOT_FOUND",
+        null
+      ],
+      "expected": "No satellite scene was found for that area and date. Try a nearby date, a longer period, or a wider area."
+    },
+    {
+      "args": [
+        "INSUFFICIENT_SCENES",
+        null
+      ],
+      "expected": "There were not enough scenes to compare. Try a nearby date, a longer period, or a wider area."
+    },
+    {
+      "args": [
+        "INSUFFICIENT_CREDITS",
+        null
+      ],
+      "expected": "There were not enough credits to run this."
+    },
+    {
+      "args": [
+        "VALIDATION_ERROR",
+        "field x is required"
+      ],
+      "expected": "This request could not be run as written."
+    },
+    {
+      "args": [
+        "WHATEVER",
+        "boom"
+      ],
+      "expected": "This run did not finish. Nothing was charged."
+    },
+    {
+      "args": [
+        null,
+        null
+      ],
+      "expected": "This run did not finish. Nothing was charged."
+    }
+  ],
+  "warning_messages": [
+    {
+      "args": [
+        [
+          {
+            "code": "LOW_AOI_COVERAGE",
+            "message": "Scenes cover only 78% of the requested area."
+          },
+          {
+            "code": "X"
+          },
+          {
+            "code": "Y",
+            "message": ""
+          }
+        ]
+      ],
+      "expected": [
+        "Scenes cover only 78% of the requested area."
+      ]
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": []
+    }
+  ],
+  "scenes_unavailable": [
+    {
+      "args": [
+        [
+          {
+            "code": "SCENE_NOT_FOUND",
+            "message": "x"
+          }
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          {
+            "code": "INSUFFICIENT_SCENES",
+            "message": "x"
+          }
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          {
+            "code": "LOW_AOI_COVERAGE",
+            "message": "x"
+          }
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": false
+    }
+  ],
+  "format_analysis_label": [
+    {
+      "args": [
+        "ship"
+      ],
+      "expected": "Ship detection"
+    },
+    {
+      "args": [
+        "oilslick"
+      ],
+      "expected": "Oil slick detection"
+    },
+    {
+      "args": [
+        "newbuilding"
+      ],
+      "expected": "New building detection"
+    },
+    {
+      "args": [
+        "disappearbuilding"
+      ],
+      "expected": "Disappeared building detection"
+    },
+    {
+      "args": [
+        "timeseries"
+      ],
+      "expected": "Time-series change"
+    },
+    {
+      "args": [
+        "something-new"
+      ],
+      "expected": "something-new"
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": ""
+    }
+  ],
+  "format_detection_summary": [
+    {
+      "args": [
+        "ship",
+        1
+      ],
+      "expected": "1 ship"
+    },
+    {
+      "args": [
+        "ship",
+        23
+      ],
+      "expected": "23 ships"
+    },
+    {
+      "args": [
+        "timeseries",
+        7
+      ],
+      "expected": "7 changes"
+    },
+    {
+      "args": [
+        "something-new",
+        2
+      ],
+      "expected": "2 detections"
+    }
+  ],
+  "format_detection_outcome": [
+    {
+      "args": [
+        "newbuilding",
+        138
+      ],
+      "expected": "138 new buildings found"
+    },
+    {
+      "args": [
+        "ship",
+        1
+      ],
+      "expected": "1 ship found"
+    },
+    {
+      "args": [
+        "ship",
+        0
+      ],
+      "expected": "No ships found"
+    },
+    {
+      "args": [
+        "ship",
+        12345
+      ],
+      "expected": "12,345 ships found"
+    },
+    {
+      "args": [
+        "something-new",
+        2
+      ],
+      "expected": "2 detections found"
+    },
+    {
+      "args": [
+        "disappearbuilding",
+        3
+      ],
+      "expected": "3 removed buildings found"
+    }
+  ],
+  "format_detection_count": [
+    {
+      "args": [
+        138
+      ],
+      "expected": "138 found"
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": "1 found"
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": "None found"
+    },
+    {
+      "args": [
+        12345
+      ],
+      "expected": "12,345 found"
+    }
+  ],
+  "format_relative_seconds": [
+    {
+      "args": [
+        -5
+      ],
+      "expected": "just now"
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "5s ago"
+    },
+    {
+      "args": [
+        59
+      ],
+      "expected": "59s ago"
+    },
+    {
+      "args": [
+        60
+      ],
+      "expected": "1m ago"
+    },
+    {
+      "args": [
+        1800
+      ],
+      "expected": "30m ago"
+    },
+    {
+      "args": [
+        3599
+      ],
+      "expected": "59m ago"
+    },
+    {
+      "args": [
+        3600
+      ],
+      "expected": "1h ago"
+    },
+    {
+      "args": [
+        64800
+      ],
+      "expected": "18h ago"
+    },
+    {
+      "args": [
+        86399
+      ],
+      "expected": "23h ago"
+    },
+    {
+      "args": [
+        86400
+      ],
+      "expected": "1d ago"
+    },
+    {
+      "args": [
+        259200
+      ],
+      "expected": "3d ago"
+    }
+  ],
+  "parse_iso8601": [
+    {
+      "args": [
+        "2026-09-01T04:22:52.74747Z"
+      ],
+      "expected": "2026-09-01T04:22:52.747470+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.7Z"
+      ],
+      "expected": "2026-09-01T04:22:52.700000+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.74Z"
+      ],
+      "expected": "2026-09-01T04:22:52.740000+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.747Z"
+      ],
+      "expected": "2026-09-01T04:22:52.747000+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.7474Z"
+      ],
+      "expected": "2026-09-01T04:22:52.747400+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.747470Z"
+      ],
+      "expected": "2026-09-01T04:22:52.747470+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.7474701Z"
+      ],
+      "expected": "2026-09-01T04:22:52.747470+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52Z"
+      ],
+      "expected": "2026-09-01T04:22:52+00:00"
+    },
+    {
+      "args": [
+        "2026-09-01T04:22:52.74747+00:00"
+      ],
+      "expected": "2026-09-01T04:22:52.747470+00:00"
+    },
+    {
+      "args": [
+        "2026-07-30T05:12:00"
+      ],
+      "expected": "2026-07-30T05:12:00+00:00"
+    },
+    {
+      "args": [
+        "2026-07-30T05:12:00+09:00"
+      ],
+      "expected": "2026-07-30T05:12:00+09:00"
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": null
+    },
+    {
+      "args": [
+        "not a date"
+      ],
+      "expected": null
+    },
+    {
+      "args": [
+        "2026-13-45T99:99:99Z"
+      ],
+      "expected": null
+    }
+  ],
+  "constants": {
+    "LEGEND_REQUESTED": "Requested",
+    "LEGEND_COVERED": "Covered",
+    "LEGEND_NOT_COVERED": "Not covered",
+    "CHECKING": "Checking coverage and cost…",
+    "SCENES_UNAVAILABLE_HINT": "Try a nearby date, a longer period, or a wider area.",
+    "COVERAGE_UNCHECKED": "The analysed area could not be checked this time. The cost assumes the full area.",
+    "ESTIMATE_FAILED": "The estimate could not be loaded this time. Edit the area to try again.",
+    "SETUP_TITLE": "Set up the analysis",
+    "ANALYSIS_LABELS": {
+      "ship": "Ship detection",
+      "oilslick": "Oil slick detection",
+      "newbuilding": "New building detection",
+      "disappearbuilding": "Disappeared building detection",
+      "timeseries": "Time-series change"
+    },
+    "DETECTION_NOUNS": {
+      "ship": [
+        "ship",
+        "ships"
+      ],
+      "oilslick": [
+        "oil slick",
+        "oil slicks"
+      ],
+      "newbuilding": [
+        "new building",
+        "new buildings"
+      ],
+      "disappearbuilding": [
+        "removed building",
+        "removed buildings"
+      ],
+      "timeseries": [
+        "change",
+        "changes"
+      ]
+    }
+  }
+}

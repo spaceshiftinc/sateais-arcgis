@@ -1,0 +1,14 @@
+<Project>
+
+  <!-- Single source of the add-in version. Config.daml and the User-Agent read it from here. -->
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <Authors>SpaceShift Inc.</Authors>
+    <Company>SpaceShift Inc.</Company>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+
+</Project>

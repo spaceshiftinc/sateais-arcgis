@@ -36,3 +36,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: bash scripts/package.sh
+
+  dotnet:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet build SateAIs.sln -c Release
+      - run: dotnet test tests/SateAIs.Core.Tests -c Release --no-build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SateAIs.AddIn.esriAddinX
+          path: src/SateAIs.AddIn/bin/Release/SateAIs.AddIn.esriAddinX
