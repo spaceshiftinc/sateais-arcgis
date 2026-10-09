@@ -1,11 +1,17 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
+using SateAIs.Core.Jobs;
 
 namespace SateAIs.Core.Wording;
 
 /// <summary>Human-readable summaries of a job: labels, counts and dates.</summary>
 public static partial class JobSummary
 {
+    /// <summary>Shown while a job's request parameters are still unknown.</summary>
+    public const string MissingRequestHint = "Request details unavailable — press Refresh to fetch them.";
+
+    private const int SceneIdMax = 30;
+
     /// <summary>Display names. The same names head the public API documentation.</summary>
     public static readonly IReadOnlyDictionary<string, string> AnalysisLabels = new Dictionary<string, string>
     {
@@ -147,6 +153,92 @@ public static partial class JobSummary
         }
         return $"{hours / 24}d ago";
     }
+
+    /// <summary>
+    /// A scene id shortened to what identifies it: platform and acquisition date for a Sentinel-1
+    /// granule, otherwise cut to length. The full id stays in the tooltip.
+    /// </summary>
+    public static string FormatSceneId(string? sceneId)
+    {
+        if (string.IsNullOrEmpty(sceneId))
+        {
+            return "";
+        }
+        var parts = sceneId.Split('_');
+        if (parts.Length >= 5 && parts[0].Length >= 2 && parts[0][..2].Equals("S1", StringComparison.OrdinalIgnoreCase))
+        {
+            var stamp = parts[4];
+            if (stamp.Length >= 8 && stamp[..8].All(char.IsAsciiDigit))
+            {
+                return $"{parts[0]} {stamp[..4]}-{stamp[4..6]}-{stamp[6..8]}";
+            }
+        }
+        return Shorten(sceneId, SceneIdMax);
+    }
+
+    /// <summary>
+    /// One line saying what was asked for, or "" when nothing is known. The dates are labelled:
+    /// a card also shows when the job was submitted, and the two look alike unlabelled.
+    /// </summary>
+    public static string BuildRequestSummary(TrackedJob job)
+    {
+        if (!string.IsNullOrEmpty(job.DateStart) && !string.IsNullOrEmpty(job.DateEnd))
+        {
+            return $"Period {job.DateStart} → {job.DateEnd}";
+        }
+        if (!string.IsNullOrEmpty(job.SceneId))
+        {
+            return $"Scene {FormatSceneId(job.SceneId)}";
+        }
+        if (!string.IsNullOrEmpty(job.Date))
+        {
+            return $"Reference date {job.Date}";
+        }
+        return "";
+    }
+
+    /// <summary>Everything the card itself elides, as plain text lines.</summary>
+    public static string BuildRequestTooltip(TrackedJob job, DateTimeOffset? now = null)
+    {
+        var lines = new List<string> { FormatAnalysisLabel(job.AnalysisType), $"Job ID: {job.JobId}" };
+        var submitted = FormatSubmittedAt(job.SubmittedAt, now);
+        if (submitted.Length > 0)
+        {
+            lines.Add($"Submitted: {submitted}");
+        }
+        if (!string.IsNullOrEmpty(job.DateStart) && !string.IsNullOrEmpty(job.DateEnd))
+        {
+            lines.Add($"Period: {job.DateStart} → {job.DateEnd}");
+        }
+        else if (!string.IsNullOrEmpty(job.Date))
+        {
+            lines.Add($"Reference date: {job.Date}");
+        }
+        if (!string.IsNullOrEmpty(job.SceneId))
+        {
+            lines.Add($"Scene: {job.SceneId}");
+        }
+        if (job.RequestSource.Length == 0)
+        {
+            lines.Add("");
+            lines.Add(MissingRequestHint);
+        }
+        return string.Join("\n", lines);
+    }
+
+    /// <summary>Lower-cased haystack for the search box: full id, both spellings of the type, scene and dates.</summary>
+    public static string BuildSearchText(TrackedJob job)
+    {
+        string?[] parts =
+        [
+            job.JobId, job.AnalysisType, FormatAnalysisLabel(job.AnalysisType),
+            job.SceneId, job.Date, job.DateStart, job.DateEnd,
+        ];
+        return string.Join(" ", parts.Where(p => !string.IsNullOrEmpty(p))).ToLowerInvariant();
+    }
+
+    private static string Shorten(string text, int limit) =>
+        text.Length <= limit ? text : text[..Math.Max(limit - 1, 0)] + "…";
 
     private static (string Singular, string Plural) Nouns(string analysisType) =>
         DetectionNouns.GetValueOrDefault(analysisType, ("detection", "detections"));

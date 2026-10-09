@@ -1,7 +1,8 @@
 <UserControl x:Class="SateAIs.AddIn.Dockpane.SateAIsDockpaneView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:analysis="clr-namespace:SateAIs.AddIn.Analysis">
+             xmlns:analysis="clr-namespace:SateAIs.AddIn.Analysis"
+             xmlns:jobs="clr-namespace:SateAIs.AddIn.Jobs">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,12 +21,12 @@
                 <TextBlock Text="{Binding VersionLabel}" Margin="8,0,0,0" FontSize="11" Foreground="{StaticResource Cosmic.TextDim}" VerticalAlignment="Center" />
             </StackPanel>
         </Border>
-        <TabControl Style="{StaticResource Cosmic.TabControl}">
+        <TabControl Style="{StaticResource Cosmic.TabControl}" SelectedIndex="{Binding SelectedTab, Mode=TwoWay}">
             <TabItem Header="Analysis" Style="{StaticResource Cosmic.TabItem}">
                 <analysis:AnalysisView DataContext="{Binding Analysis}" />
             </TabItem>
             <TabItem Header="Jobs" Style="{StaticResource Cosmic.TabItem}">
-                <TextBlock Margin="12" Text="Jobs — coming in the next build." Foreground="{StaticResource Cosmic.TextMuted}" />
+                <jobs:JobsView DataContext="{Binding Jobs}" />
             </TabItem>
         </TabControl>
     </DockPanel>

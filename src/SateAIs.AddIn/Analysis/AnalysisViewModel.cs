@@ -1,7 +1,5 @@
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Media;
-using ArcGIS.Desktop.Framework;
 using SateAIs.AddIn.Map;
 using SateAIs.AddIn.Settings;
 using SateAIs.Core.Analysis;
@@ -682,38 +680,9 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
 
     private static DateTime? ToDateTime(DateOnly date) => date.ToDateTime(TimeOnly.MinValue);
 
-    private static void Notify(string message)
-    {
-        FrameworkApplication.AddNotification(new Notification
-        {
-            Title = "SateAIs",
-            Message = message,
-            ImageSource = Application.Current.Resources["ToastLicensing32"] as ImageSource,
-        });
-    }
+    private static void Notify(string message) => Ui.Notify(message);
 
-    private static void OnUiThread(Action action)
-    {
-        var dispatcher = Application.Current?.Dispatcher;
-        if (dispatcher is null || dispatcher.CheckAccess())
-        {
-            action();
-        }
-        else
-        {
-            dispatcher.Invoke(action);
-        }
-    }
+    private static void OnUiThread(Action action) => Ui.OnUiThread(action);
 
-    private static async Task Guard(Task task)
-    {
-        try
-        {
-            await task;
-        }
-        catch (Exception e)
-        {
-            Debug.WriteLine($"SateAIs: {e}");
-        }
-    }
+    private static Task Guard(Task task) => Ui.Guard(task);
 }
