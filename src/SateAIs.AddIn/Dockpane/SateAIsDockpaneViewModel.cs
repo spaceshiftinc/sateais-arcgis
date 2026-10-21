@@ -27,10 +27,24 @@ internal class SateAIsDockpaneViewModel : DockPane
 
     public string VersionLabel => $"v{ClientVersion.Current}";
 
+    /// <summary>The map shows the bands of the tab in view: the form's while on Analysis, none of them on Jobs.</summary>
     public int SelectedTab
     {
         get => _selectedTab;
-        set => SetProperty(ref _selectedTab, value);
+        set
+        {
+            if (SetProperty(ref _selectedTab, value))
+            {
+                if (value == AnalysisTab)
+                {
+                    Analysis.ShowBands();
+                }
+                else
+                {
+                    Analysis.HideBands();
+                }
+            }
+        }
     }
 
     internal static void Show() => FrameworkApplication.DockPaneManager.Find(DockPaneId)?.Activate();
@@ -40,6 +54,10 @@ internal class SateAIsDockpaneViewModel : DockPane
         if (isVisible)
         {
             Analysis.RefreshAuthState();
+            if (_selectedTab == AnalysisTab)
+            {
+                Analysis.ShowBands();
+            }
         }
         base.OnShow(isVisible);
     }
