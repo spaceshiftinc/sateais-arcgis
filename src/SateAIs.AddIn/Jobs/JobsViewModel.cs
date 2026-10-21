@@ -364,12 +364,17 @@ internal sealed class JobsViewModel : ObservableObject, IDisposable
         }
     }
 
+    private async Task HideAoiAsync()
+    {
+        _previewedJobId = null;
+        await Ui.Guard(_aoi.ClearAsync());
+    }
+
     private async Task ToggleAoiAsync(string jobId, string polygon)
     {
         if (_previewedJobId == jobId)
         {
-            _previewedJobId = null;
-            await _aoi.ClearAsync();
+            await HideAoiAsync();
             return;
         }
         if (!await _aoi.ShowAsync(polygon, zoomToFit: true))
@@ -393,6 +398,7 @@ internal sealed class JobsViewModel : ObservableObject, IDisposable
             var existing = await ResultLayers.FindResultLayerAsync(job.AnalysisType, jobId);
             if (existing is not null)
             {
+                await HideAoiAsync();
                 await ResultLayers.ZoomToAsync(existing);
                 Ui.Notify("This result is already on the map.");
                 return;
@@ -429,12 +435,8 @@ internal sealed class JobsViewModel : ObservableObject, IDisposable
                 // The frame is auxiliary; it never fails the result load.
                 await Ui.Guard(ResultLayers.AddAoiAsync(job.Polygon, job));
             }
-            if (_previewedJobId == jobId)
-            {
-                // The area is now a real, toggleable layer; the overlay would only sit on top of it.
-                _previewedJobId = null;
-                await Ui.Guard(_aoi.ClearAsync());
-            }
+            // The result is what the user is looking at now; the area overlay (this job's or another's) would only sit on top of it.
+            await HideAoiAsync();
 
             _store.SetDetectionCount(jobId, count);
             card.SetDetectionCount(count);
