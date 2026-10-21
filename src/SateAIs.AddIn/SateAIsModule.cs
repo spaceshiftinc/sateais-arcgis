@@ -15,3 +15,9 @@ internal class ShowDockpaneButton : Button
 {
     protected override void OnClick() => Dockpane.SateAIsDockpaneViewModel.Show();
 }
+
+/// <summary>The key can be set or changed from the ribbon at any time, not only from the welcome page.</summary>
+internal class OpenSettingsButton : Button
+{
+    protected override void OnClick() => Dockpane.SateAIsDockpaneViewModel.OpenSettings();
+}
