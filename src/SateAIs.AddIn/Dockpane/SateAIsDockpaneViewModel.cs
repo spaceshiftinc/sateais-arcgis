@@ -49,6 +49,15 @@ internal class SateAIsDockpaneViewModel : DockPane
 
     internal static void Show() => FrameworkApplication.DockPaneManager.Find(DockPaneId)?.Activate();
 
+    /// <summary>Open the API key settings; the pane's own state follows the saved key.</summary>
+    internal static void OpenSettings()
+    {
+        if (FrameworkApplication.DockPaneManager.Find(DockPaneId) is SateAIsDockpaneViewModel pane)
+        {
+            pane.Analysis.OpenSettingsCommand.Execute(null);
+        }
+    }
+
     protected override void OnShow(bool isVisible)
     {
         if (isVisible)
