@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Icon outlines in a 24-unit box, the same path data every SateAIs client uses.
+         Drawn with a 1.6 stroke, round caps and joins, in the detection type's colour. -->
+
+    <GeometryGroup x:Key="Icon.ship">
+        <PathGeometry Figures="M4 17h16l-2 4H6l-2-4Z" />
+        <PathGeometry Figures="M6 17V9h12v8" />
+        <PathGeometry Figures="M12 9V4" />
+    </GeometryGroup>
+    <GeometryGroup x:Key="Icon.oilslick">
+        <PathGeometry Figures="M12 3c0 0 4.2 5.4 4.2 8.2a4.2 4.2 0 0 1-8.4 0C7.8 8.4 12 3 12 3Z" />
+        <PathGeometry Figures="M3 19c3-2.6 6 2.6 9 0s6 2.6 9 0" />
+    </GeometryGroup>
+    <GeometryGroup x:Key="Icon.newbuilding">
+        <PathGeometry Figures="M4 21V10l6-4v15" />
+        <PathGeometry Figures="M14 21V13l6-3v11" />
+        <PathGeometry Figures="M12 3v4" />
+        <PathGeometry Figures="M10 5h4" />
+    </GeometryGroup>
+    <!-- The missing building is dashed; drawn as a second path in the view. -->
+    <GeometryGroup x:Key="Icon.disappearbuilding">
+        <PathGeometry Figures="M4 21V10l6-4v15" />
+    </GeometryGroup>
+    <GeometryGroup x:Key="Icon.disappearbuilding.dashed">
+        <PathGeometry Figures="M14 21v-3" />
+        <PathGeometry Figures="M14 14v-1" />
+        <PathGeometry Figures="M20 21V10" />
+    </GeometryGroup>
+    <GeometryGroup x:Key="Icon.timeseries">
+        <PathGeometry Figures="M3 18l5-6 4 3 5-8 4 5" />
+        <PathGeometry Figures="M3 21h18" />
+    </GeometryGroup>
+
+    <GeometryGroup x:Key="Icon.target">
+        <EllipseGeometry Center="12,12" RadiusX="8" RadiusY="8" />
+        <EllipseGeometry Center="12,12" RadiusX="3.2" RadiusY="3.2" />
+        <PathGeometry Figures="M12 2v2M12 20v2M2 12h2M20 12h2" />
+    </GeometryGroup>
+    <GeometryGroup x:Key="Icon.calendar">
+        <RectangleGeometry Rect="3.5,5,17,15" RadiusX="2.5" RadiusY="2.5" />
+        <PathGeometry Figures="M3.5 10h17" />
+        <PathGeometry Figures="M8 3v4M16 3v4" />
+    </GeometryGroup>
+    <GeometryGroup x:Key="Icon.draw">
+        <PathGeometry Figures="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8" />
+        <PathGeometry Figures="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8" />
+        <PathGeometry Figures="M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16" />
+        <PathGeometry Figures="M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16" />
+        <PathGeometry Figures="M4 12h1.5M10.5 12h3M18.5 12H20M12 4v1.5M12 10.5v3M12 18.5V20" />
+    </GeometryGroup>
+
+</ResourceDictionary>

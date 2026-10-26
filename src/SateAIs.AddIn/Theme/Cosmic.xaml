@@ -1,16 +1,20 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
-    <!-- The COSMIC design tokens, as in the QGIS plugin's styles.py. Use these; do not pick new values. -->
+    <!-- The COSMIC design tokens and control styles, as in the QGIS plugin's styles.py.
+         Use these values; do not pick new ones. -->
 
     <Color x:Key="Cosmic.Color.Background">#0B131A</Color>
     <Color x:Key="Cosmic.Color.BackgroundRaised">#0E161D</Color>
     <Color x:Key="Cosmic.Color.Surface">#121A21</Color>
     <Color x:Key="Cosmic.Color.SurfaceRaised">#1A242C</Color>
     <Color x:Key="Cosmic.Color.Border">#22303A</Color>
+    <Color x:Key="Cosmic.Color.BorderHover">#62717C</Color>
     <Color x:Key="Cosmic.Color.Text">#E3EBF1</Color>
     <Color x:Key="Cosmic.Color.TextMuted">#8695A2</Color>
     <Color x:Key="Cosmic.Color.TextDim">#67757F</Color>
+    <Color x:Key="Cosmic.Color.TextFaint">#3C4750</Color>
     <Color x:Key="Cosmic.Color.Accent">#009FE8</Color>
     <Color x:Key="Cosmic.Color.AccentHover">#2BB4F0</Color>
     <Color x:Key="Cosmic.Color.AccentPressed">#0079B3</Color>
@@ -24,9 +28,11 @@
     <SolidColorBrush x:Key="Cosmic.Surface" Color="{StaticResource Cosmic.Color.Surface}" />
     <SolidColorBrush x:Key="Cosmic.SurfaceRaised" Color="{StaticResource Cosmic.Color.SurfaceRaised}" />
     <SolidColorBrush x:Key="Cosmic.Border" Color="{StaticResource Cosmic.Color.Border}" />
+    <SolidColorBrush x:Key="Cosmic.BorderHover" Color="{StaticResource Cosmic.Color.BorderHover}" />
     <SolidColorBrush x:Key="Cosmic.Text" Color="{StaticResource Cosmic.Color.Text}" />
     <SolidColorBrush x:Key="Cosmic.TextMuted" Color="{StaticResource Cosmic.Color.TextMuted}" />
     <SolidColorBrush x:Key="Cosmic.TextDim" Color="{StaticResource Cosmic.Color.TextDim}" />
+    <SolidColorBrush x:Key="Cosmic.TextFaint" Color="{StaticResource Cosmic.Color.TextFaint}" />
     <SolidColorBrush x:Key="Cosmic.Accent" Color="{StaticResource Cosmic.Color.Accent}" />
     <SolidColorBrush x:Key="Cosmic.AccentHover" Color="{StaticResource Cosmic.Color.AccentHover}" />
     <SolidColorBrush x:Key="Cosmic.AccentPressed" Color="{StaticResource Cosmic.Color.AccentPressed}" />
@@ -34,12 +40,402 @@
     <SolidColorBrush x:Key="Cosmic.Success" Color="{StaticResource Cosmic.Color.Success}" />
     <SolidColorBrush x:Key="Cosmic.Warning" Color="{StaticResource Cosmic.Color.Warning}" />
     <SolidColorBrush x:Key="Cosmic.Error" Color="{StaticResource Cosmic.Color.Error}" />
+    <SolidColorBrush x:Key="Cosmic.HoverOverlay" Color="#0DE3EBF1" />
+    <SolidColorBrush x:Key="Cosmic.ChosenOverlay" Color="#14009FE8" />
+    <SolidColorBrush x:Key="Cosmic.ButtonFace" Color="#08FFFFFF" />
+    <SolidColorBrush x:Key="Cosmic.ButtonFaceHover" Color="#0FFFFFFF" />
 
     <FontFamily x:Key="Cosmic.FontFamily">IBM Plex Sans, Segoe UI, Noto Sans JP, Arial</FontFamily>
     <FontFamily x:Key="Cosmic.FontFamilyMono">IBM Plex Mono, Consolas, Courier New</FontFamily>
-    <sys:Double xmlns:sys="clr-namespace:System;assembly=System.Runtime" x:Key="Cosmic.FontSize">13</sys:Double>
+    <sys:Double x:Key="Cosmic.FontSize">13</sys:Double>
 
-    <!-- Tabs: text with an accent underline, no chrome. -->
+    <!-- Text -->
+    <Style x:Key="Cosmic.Text.Base" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="Cosmic.Title" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style x:Key="Cosmic.Subtitle" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+    </Style>
+    <Style x:Key="Cosmic.Hint" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="11.5" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+    </Style>
+    <Style x:Key="Cosmic.StepHint" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="10.5" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextDim}" />
+    </Style>
+    <Style x:Key="Cosmic.Section" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="10.5" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="Typography.Capitals" Value="AllSmallCaps" />
+    </Style>
+    <Style x:Key="Cosmic.StepLabel" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style x:Key="Cosmic.StepValue" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- Cards -->
+    <Style x:Key="Cosmic.Card" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Cosmic.Surface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="12" />
+    </Style>
+
+    <!-- Buttons -->
+    <Style x:Key="Cosmic.Button" TargetType="ButtonBase">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.ButtonFace}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.ButtonFaceHover}" />
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.BorderHover}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.TextDim}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Cosmic.PrimaryButton" TargetType="ButtonBase" BasedOn="{StaticResource Cosmic.Button}">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.Accent}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Border x:Name="Face" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.AccentHover}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.AccentPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Face" Property="Background" Value="#33009FE8" />
+                            <Setter Property="Foreground" Value="#73FFFFFF" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Cosmic.GhostButton" TargetType="ButtonBase" BasedOn="{StaticResource Cosmic.Button}">
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="4,8" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.AccentBright}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Small text link inside a step row (Redraw / Clear) -->
+    <Style x:Key="Cosmic.LinkButton" TargetType="ButtonBase">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="11.5" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Accent}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <ContentPresenter VerticalAlignment="Center" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.LinkButtonMuted" TargetType="ButtonBase" BasedOn="{StaticResource Cosmic.LinkButton}">
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource Cosmic.Error}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- A whole step row is clickable -->
+    <Style x:Key="Cosmic.StepRow" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Face" Background="Transparent" CornerRadius="8" Padding="4,6">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.HoverOverlay}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- The 19 px numbered circle -->
+    <Style x:Key="Cosmic.StepBadge" TargetType="Border">
+        <Setter Property="Width" Value="19" />
+        <Setter Property="Height" Value="19" />
+        <Setter Property="CornerRadius" Value="9.5" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.BorderHover}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- One of the 5 detection types -->
+    <Style x:Key="Cosmic.StepOption" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Face" Background="Transparent" CornerRadius="8" Padding="8,7">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.HoverOverlay}" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsChosen}" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.ChosenOverlay}" />
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.AccentBright}" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Segmented strip: radio buttons in one bordered row -->
+    <Style x:Key="Cosmic.SegButton" TargetType="RadioButton">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Face" Background="Transparent" BorderBrush="{StaticResource Cosmic.Border}" BorderThickness="1,1,0,1" Padding="10,4">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.SegButtonFirst" TargetType="RadioButton" BasedOn="{StaticResource Cosmic.SegButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Face" Background="Transparent" BorderBrush="{StaticResource Cosmic.Border}" BorderThickness="1,1,0,1" CornerRadius="8,0,0,8" Padding="10,4">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.SegButtonLast" TargetType="RadioButton" BasedOn="{StaticResource Cosmic.SegButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Face" Background="Transparent" BorderBrush="{StaticResource Cosmic.Border}" BorderThickness="1" CornerRadius="0,8,8,0" Padding="10,4">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Period presets: 12 months / 2 years / 5 years -->
+    <Style x:Key="Cosmic.Preset" TargetType="Button" BasedOn="{StaticResource Cosmic.Button}">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="Padding" Value="8,3" />
+    </Style>
+
+    <!-- Inputs -->
+    <Style x:Key="Cosmic.TextBox" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="CaretBrush" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.Surface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12,7" />
+        <Setter Property="SelectionBrush" Value="{StaticResource Cosmic.Accent}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <ScrollViewer x:Name="PART_ContentHost" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.PolygonEdit" TargetType="TextBox" BasedOn="{StaticResource Cosmic.TextBox}">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamilyMono}" />
+        <Setter Property="FontSize" Value="11" />
+    </Style>
+    <Style x:Key="Cosmic.PasswordBox" TargetType="PasswordBox">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="CaretBrush" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.Surface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12,7" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <ScrollViewer x:Name="PART_ContentHost" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.DatePicker" TargetType="DatePicker">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.Surface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="SelectedDateFormat" Value="Short" />
+    </Style>
+    <Style x:Key="Cosmic.CheckBox" TargetType="CheckBox">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- Thin bars: coverage meter and the indeterminate progress -->
+    <Style x:Key="Cosmic.Meter" TargetType="ProgressBar">
+        <Setter Property="Height" Value="4" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Accent}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Grid x:Name="TemplateRoot">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="2" />
+                        <Border x:Name="PART_Track" />
+                        <Border x:Name="PART_Indicator" Background="{TemplateBinding Foreground}" CornerRadius="2" HorizontalAlignment="Left" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Tabs: text with an accent underline, no chrome -->
     <Style x:Key="Cosmic.TabControl" TargetType="TabControl">
         <Setter Property="Background" Value="{StaticResource Cosmic.Background}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -47,7 +443,6 @@
         <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource Cosmic.FontSize}" />
     </Style>
-
     <Style x:Key="Cosmic.TabItem" TargetType="TabItem">
         <Setter Property="Foreground" Value="{StaticResource Cosmic.TextDim}" />
         <Setter Property="Padding" Value="16,8" />
