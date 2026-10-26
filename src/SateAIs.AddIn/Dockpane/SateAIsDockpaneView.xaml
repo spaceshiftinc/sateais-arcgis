@@ -1,7 +1,8 @@
 <UserControl x:Class="SateAIs.AddIn.Dockpane.SateAIsDockpaneView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:analysis="clr-namespace:SateAIs.AddIn.Analysis">
+             xmlns:analysis="clr-namespace:SateAIs.AddIn.Analysis"
+             xmlns:jobs="clr-namespace:SateAIs.AddIn.Jobs">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,19 +14,24 @@
         <!-- Brand bar -->
         <Border DockPanel.Dock="Top" Background="{StaticResource Cosmic.BackgroundRaised}"
                 BorderBrush="{StaticResource Cosmic.Border}" BorderThickness="0,0,0,1" Padding="12,8">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="SPACESHIFT" FontWeight="Bold" FontSize="13" Foreground="{StaticResource Cosmic.Text}" VerticalAlignment="Center" />
-                <TextBlock Text="✦" Margin="14,0,8,0" Foreground="{StaticResource Cosmic.Accent}" VerticalAlignment="Center" />
-                <TextBlock Text="SateAIs" Foreground="{StaticResource Cosmic.TextMuted}" VerticalAlignment="Center" />
-                <TextBlock Text="{Binding VersionLabel}" Margin="8,0,0,0" FontSize="11" Foreground="{StaticResource Cosmic.TextDim}" VerticalAlignment="Center" />
-            </StackPanel>
+            <DockPanel>
+                <!-- The key can be changed at any time, not only before the first one is saved. -->
+                <Button DockPanel.Dock="Right" Content="Settings" Style="{StaticResource Cosmic.GhostButton}" FontSize="11.5" Padding="4,0"
+                        Command="{Binding Analysis.OpenSettingsCommand}" ToolTip="Set or change the API key" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="SPACESHIFT" FontWeight="Bold" FontSize="13" Foreground="{StaticResource Cosmic.Text}" VerticalAlignment="Center" />
+                    <TextBlock Text="✦" Margin="14,0,8,0" Foreground="{StaticResource Cosmic.Accent}" VerticalAlignment="Center" />
+                    <TextBlock Text="SateAIs" Foreground="{StaticResource Cosmic.TextMuted}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding VersionLabel}" Margin="8,0,0,0" FontSize="11" Foreground="{StaticResource Cosmic.TextDim}" VerticalAlignment="Center" />
+                </StackPanel>
+            </DockPanel>
         </Border>
-        <TabControl Style="{StaticResource Cosmic.TabControl}">
+        <TabControl Style="{StaticResource Cosmic.TabControl}" SelectedIndex="{Binding SelectedTab, Mode=TwoWay}">
             <TabItem Header="Analysis" Style="{StaticResource Cosmic.TabItem}">
                 <analysis:AnalysisView DataContext="{Binding Analysis}" />
             </TabItem>
             <TabItem Header="Jobs" Style="{StaticResource Cosmic.TabItem}">
-                <TextBlock Margin="12" Text="Jobs — coming in the next build." Foreground="{StaticResource Cosmic.TextMuted}" />
+                <jobs:JobsView DataContext="{Binding Jobs}" />
             </TabItem>
         </TabControl>
     </DockPanel>

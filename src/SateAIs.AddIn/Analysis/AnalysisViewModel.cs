@@ -1,7 +1,5 @@
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Media;
-using ArcGIS.Desktop.Framework;
 using SateAIs.AddIn.Map;
 using SateAIs.AddIn.Settings;
 using SateAIs.Core.Analysis;
@@ -28,6 +26,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
     private string? _clientKey;
     private Step _openStep = Step.Kind;
     private string _shownPolygon = "";
+    private string? _analysedWkt;
     private bool _polygonFromMap;
     private bool _hasApiKey;
     private bool _picking;
@@ -282,7 +281,22 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
     {
         _estimate.Cancel();
         HideEstimate();
-        _ = Guard(_overlay.ClearAsync());
+        HideBands();
+    }
+
+    /// <summary>The tab went out of sight: its bands come off the map so they never sit over a result.</summary>
+    public void HideBands() => _ = Guard(_overlay.ClearAsync());
+
+    /// <summary>The tab is back: draw what the form holds, where the map already is.</summary>
+    public void ShowBands()
+    {
+        var polygon = _form.BuildRequest()?.Polygon ?? "";
+        _shownPolygon = polygon;
+        _ = Guard(_overlay.ShowRequestedAsync(polygon, recenter: false));
+        if (!string.IsNullOrEmpty(_analysedWkt))
+        {
+            _ = Guard(_overlay.ShowAnalysedAsync(_analysedWkt));
+        }
     }
 
     // --- actions ----------------------------------------------------------------
@@ -514,6 +528,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
 
     private void HideEstimate()
     {
+        _analysedWkt = null;
         EstimateVisible = EstimateBusy = false;
         Note = "";
         CreditsVisible = MeterVisible = LegendVisible = false;
@@ -589,7 +604,8 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
         }
 
         ShowBalance(preview.Credits?.Balance, preview.Credits?.Estimated);
-        _ = Guard(_overlay.ShowAnalysedAsync(preview.Coverage?.Polygon));
+        _analysedWkt = preview.Coverage?.Polygon;
+        _ = Guard(_overlay.ShowAnalysedAsync(_analysedWkt));
     }
 
     private void ShowBalance(double? balance, double? estimated)
@@ -682,38 +698,9 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
 
     private static DateTime? ToDateTime(DateOnly date) => date.ToDateTime(TimeOnly.MinValue);
 
-    private static void Notify(string message)
-    {
-        FrameworkApplication.AddNotification(new Notification
-        {
-            Title = "SateAIs",
-            Message = message,
-            ImageSource = Application.Current.Resources["ToastLicensing32"] as ImageSource,
-        });
-    }
+    private static void Notify(string message) => Ui.Notify(message);
 
-    private static void OnUiThread(Action action)
-    {
-        var dispatcher = Application.Current?.Dispatcher;
-        if (dispatcher is null || dispatcher.CheckAccess())
-        {
-            action();
-        }
-        else
-        {
-            dispatcher.Invoke(action);
-        }
-    }
+    private static void OnUiThread(Action action) => Ui.OnUiThread(action);
 
-    private static async Task Guard(Task task)
-    {
-        try
-        {
-            await task;
-        }
-        catch (Exception e)
-        {
-            Debug.WriteLine($"SateAIs: {e}");
-        }
-    }
+    private static Task Guard(Task task) => Ui.Guard(task);
 }

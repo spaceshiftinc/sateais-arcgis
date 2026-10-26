@@ -44,6 +44,14 @@
     <SolidColorBrush x:Key="Cosmic.ChosenOverlay" Color="#14009FE8" />
     <SolidColorBrush x:Key="Cosmic.ButtonFace" Color="#08FFFFFF" />
     <SolidColorBrush x:Key="Cosmic.ButtonFaceHover" Color="#0FFFFFFF" />
+    <!-- Job rows: the id in the weakest tone, captions one step behind their values -->
+    <SolidColorBrush x:Key="Cosmic.TextGhost" Color="#4C5964" />
+    <SolidColorBrush x:Key="Cosmic.MetaLabel" Color="#5A6771" />
+    <SolidColorBrush x:Key="Cosmic.MetaValue" Color="#A9B7C2" />
+    <SolidColorBrush x:Key="Cosmic.PillOkBackground" Color="#1F6CC39A" />
+    <SolidColorBrush x:Key="Cosmic.PillErrorBackground" Color="#1FE08B80" />
+    <SolidColorBrush x:Key="Cosmic.PillMutedBackground" Color="#24009FE8" />
+    <SolidColorBrush x:Key="Cosmic.PulseOverlay" Color="#1A009FE8" />
 
     <FontFamily x:Key="Cosmic.FontFamily">IBM Plex Sans, Segoe UI, Noto Sans JP, Arial</FontFamily>
     <FontFamily x:Key="Cosmic.FontFamilyMono">IBM Plex Mono, Consolas, Courier New</FontFamily>
@@ -433,6 +441,93 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!-- Chip: an action with the same frame as an input (Refresh) -->
+    <Style x:Key="Cosmic.Chip" TargetType="ButtonBase" BasedOn="{StaticResource Cosmic.Button}">
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.Surface}" />
+        <Setter Property="Padding" Value="12,7" />
+    </Style>
+
+    <!-- Job rows -->
+    <Style x:Key="Cosmic.JobTitle" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style x:Key="Cosmic.JobMeta" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+    </Style>
+    <!-- The id is a value to copy, not to read: a bare, selectable line in the weakest tone -->
+    <Style x:Key="Cosmic.JobId" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamilyMono}" />
+        <Setter Property="FontSize" Value="9" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextGhost}" />
+        <Setter Property="CaretBrush" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="SelectionBrush" Value="{StaticResource Cosmic.Accent}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <ScrollViewer x:Name="PART_ContentHost" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.Pill" TargetType="Border">
+        <Setter Property="Height" Value="17" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="7,0" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.PillMutedBackground}" />
+    </Style>
+    <Style x:Key="Cosmic.PillText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="9" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Accent}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <!-- A whole row is clickable. Rows are separated by a rule, not a gap; a fresh completion glows briefly. -->
+    <Style x:Key="Cosmic.JobCard" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border BorderBrush="{StaticResource Cosmic.SurfaceRaised}" BorderThickness="0,0,0,1">
+                        <Border x:Name="Face" Background="Transparent" BorderBrush="Transparent" BorderThickness="2,0,0,0" Padding="12,12,14,12">
+                            <ContentPresenter />
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.BackgroundRaised}" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding Pulsing}" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.PulseOverlay}" />
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Empty state -->
+    <Style x:Key="Cosmic.EmptyTitle" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Title}">
+        <Setter Property="TextAlignment" Value="Center" />
+    </Style>
+    <Style x:Key="Cosmic.EmptySubtitle" TargetType="TextBlock" BasedOn="{StaticResource Cosmic.Text.Base}">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.TextMuted}" />
+        <Setter Property="TextAlignment" Value="Center" />
     </Style>
 
     <!-- Tabs: text with an accent underline, no chrome -->

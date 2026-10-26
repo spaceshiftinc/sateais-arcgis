@@ -18,11 +18,15 @@
       <groups>
         <group id="SateAIs_Group" caption="SateAIs" appearsOnAddInTab="false" keytip="SG">
           <button refID="SateAIs_ShowDockpane" size="large" />
+          <button refID="SateAIs_Settings" size="large" />
         </group>
       </groups>
       <controls>
         <button id="SateAIs_ShowDockpane" caption="SateAIs" className="ShowDockpaneButton" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32" keytip="SP">
           <tooltip heading="SateAIs">Open the SateAIs pane.<disabledText /></tooltip>
+        </button>
+        <button id="SateAIs_Settings" caption="Settings" className="OpenSettingsButton" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32" keytip="SS">
+          <tooltip heading="Settings">Set or change the API key.<disabledText /></tooltip>
         </button>
         <!-- Started from the pane, not from the ribbon. -->
         <tool id="SateAIs_RectangleTool" caption="Draw area" className="Map.RectangleTool" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32" condition="esri_mapping_mapPane">

@@ -41,6 +41,30 @@ internal static class Sentences
         return ForSubmit(e);
     }
 
+    /// <summary>Why a result could not be put on the map.</summary>
+    public static string ForResult(Exception e) => e switch
+    {
+        AuthNotConfiguredException => "Please register an API key first.",
+        AuthenticationException => "Invalid API key. Please check your settings.",
+        PermissionDeniedException => "Your account no longer has access to this result.",
+        NotFoundException { Code: "GONE" } or NotFoundException { StatusCode: 410 } => "This result has expired and is no longer available.",
+        NotFoundException => "Result not found. The job may have been removed on the server.",
+        // Not a failure: the job succeeded, the result is just not something a map can show.
+        UnsupportedResultFormatException => "This result is not a map layer, so it cannot be opened in ArcGIS Pro. Open it in the console to download it.",
+        ConflictException => "The job is not completed yet. Please wait a moment and try again.",
+        ApiException => ServerUnavailable,
+        _ => NoNetwork,
+    };
+
+    /// <summary>Why the job list could not be fetched.</summary>
+    public static string ForSync(Exception e) => e switch
+    {
+        AuthNotConfiguredException => "Please register an API key first.",
+        AuthenticationException => "Invalid API key. Please check your settings.",
+        ApiException => ServerUnavailable,
+        _ => NoNetwork,
+    };
+
     public static string ForConnectionTest(Exception e) => e switch
     {
         AuthenticationException => "Invalid API key. Please check the key issued in the console.",

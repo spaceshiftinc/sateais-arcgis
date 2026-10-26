@@ -29,6 +29,16 @@ public sealed class InverseBoolToVisibilityConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+/// <summary>True → Visible, false → Hidden: the element keeps its place, so neighbours do not shift.</summary>
+public sealed class BoolToHiddenConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is true ? Visibility.Visible : Visibility.Hidden;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 /// <summary>A colour string such as "#00d4ff" to a brush, for the per-type icons.</summary>
 public sealed class HexToBrushConverter : IValueConverter
 {
