@@ -1,0 +1,7 @@
+# Run once after cloning: `pre-commit install` (https://pre-commit.com).
+# Every commit is then scanned for secrets before it is created.
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks

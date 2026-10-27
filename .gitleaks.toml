@@ -1,0 +1,12 @@
+# Secret scanning for a public repository. The default gitleaks rules apply; only the
+# fake keys the tests use are allowed through.
+title = "sateais-arcgis"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Test fixtures that look like API keys"
+regexes = [
+  '''sk_live_abcdefghijkl1234''',
+]
