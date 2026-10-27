@@ -4,7 +4,7 @@
        Kept free of Pro references so it builds and tests on any machine. -->
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>SateAIs.Core</RootNamespace>
     <AssemblyName>SateAIs.Core</AssemblyName>
   </PropertyGroup>

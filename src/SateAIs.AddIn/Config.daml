@@ -1,6 +1,6 @@
 <ArcGIS defaultAssembly="SateAIs.AddIn.dll" defaultNamespace="SateAIs.AddIn" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
   <!-- The version attribute is stamped from Directory.Build.props at build time. -->
-  <AddInInfo id="{76a90f24-430d-463a-a5b0-4105c2305e4a}" version="0.0.0" desktopVersion="3.7">
+  <AddInInfo id="{76a90f24-430d-463a-a5b0-4105c2305e4a}" version="0.0.0" desktopVersion="3.3">
     <Name>SateAIs</Name>
     <Description>Satellite SAR detection from ArcGIS Pro: ship, oil slick, building change and time-series change.</Description>
     <Author>SpaceShift Inc.</Author>
