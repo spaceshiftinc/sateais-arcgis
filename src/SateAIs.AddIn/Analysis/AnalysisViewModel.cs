@@ -31,6 +31,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
     private bool _hasApiKey;
     private bool _picking;
     private bool _submitting;
+    private SubmitHold _submitHold;
     private string _statusText = "";
     private string _statusKind = "hint";
     private string _polygonText = "";
@@ -40,7 +41,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
         _estimate = new EstimateScheduler(FetchEstimateAsync);
         _estimate.Checking += ShowEstimateBusy;
         _estimate.Received += ShowPreview;
-        _estimate.Failed += e => ShowEstimateFailed(Sentences.ForEstimate(e));
+        _estimate.Failed += e => ShowEstimateFailed(Sentences.ForEstimate(e), SubmitGate.Blocks(e));
 
         ChooseTypeCommand = new DelegateCommand(p => ChooseType((string)p!));
         ToggleKindCommand = new DelegateCommand(_ => Toggle(Step.Kind));
@@ -194,8 +195,11 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
         }
     }
 
-    /// <summary>Only a complete form submits; never while picking or while a submission is in flight.</summary>
-    public bool CanSubmit => _form.IsComplete && !Picking && !Submitting;
+    /// <summary>
+    /// Only a complete form submits; never while picking, while a submission is in flight,
+    /// while the estimate for these inputs is still coming, or after it showed that they cannot run.
+    /// </summary>
+    public bool CanSubmit => _form.IsComplete && !Picking && !Submitting && _submitHold == SubmitHold.None;
 
     // --- estimate card ----------------------------------------------------------
 
@@ -440,6 +444,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
         _ = Guard(_overlay.ShowRequestedAsync(polygon, recenter));
         if (_form.IsComplete)
         {
+            SetSubmitHold(SubmitHold.Estimating);
             _estimate.Schedule();
         }
     }
@@ -509,6 +514,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
 
     private void ShowEstimateBusy()
     {
+        SetSubmitHold(SubmitHold.Estimating);
         EstimateVisible = true;
         EstimateBusy = true;
         Note = "";
@@ -516,8 +522,9 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
         RaiseEstimate();
     }
 
-    private void ShowEstimateFailed(string reason)
+    private void ShowEstimateFailed(string reason, bool blocksSubmit)
     {
+        SetSubmitHold(blocksSubmit ? SubmitHold.Rejected : SubmitHold.None);
         EstimateVisible = true;
         EstimateBusy = false;
         Note = reason.Length > 0 ? reason : CoreWording.EstimateFailed;
@@ -528,6 +535,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
 
     private void HideEstimate()
     {
+        SetSubmitHold(SubmitHold.None);
         _analysedWkt = null;
         EstimateVisible = EstimateBusy = false;
         Note = "";
@@ -539,6 +547,7 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
 
     private void ShowPreview(Preview preview)
     {
+        SetSubmitHold(SubmitGate.Blocks(preview) ? SubmitHold.Rejected : SubmitHold.None);
         EstimateVisible = true;
         EstimateBusy = false;
 
@@ -660,6 +669,15 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
         ToggleWhenCommand.RaiseCanExecuteChanged();
     }
 
+    private void SetSubmitHold(SubmitHold value)
+    {
+        if (_submitHold != value)
+        {
+            _submitHold = value;
+            RaiseSubmitState();
+        }
+    }
+
     private void RaiseSubmitState()
     {
         Raise(nameof(CanSubmit));
@@ -703,4 +721,16 @@ internal sealed class AnalysisViewModel : ObservableObject, IDisposable
     private static void OnUiThread(Action action) => Ui.OnUiThread(action);
 
     private static Task Guard(Task task) => Ui.Guard(task);
+
+    /// <summary>Why the estimate holds Submit, if it does.</summary>
+    private enum SubmitHold
+    {
+        None,
+
+        /// <summary>The estimate for the current inputs is scheduled or running.</summary>
+        Estimating,
+
+        /// <summary>The estimate showed that these inputs cannot run.</summary>
+        Rejected,
+    }
 }

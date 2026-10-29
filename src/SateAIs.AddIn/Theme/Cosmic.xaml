@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:prim="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework">
 
     <!-- The COSMIC design tokens and control styles, as in the QGIS plugin's styles.py.
          Use these values; do not pick new ones. -->
@@ -351,7 +352,8 @@
         <Setter Property="Padding" Value="8,3" />
     </Style>
 
-    <!-- Inputs -->
+    <!-- Inputs. WPF already insets the text by Padding, so the frame takes none: padding it as well
+         doubled the inset. Tag is the placeholder, drawn at the same inset as the text. -->
     <Style x:Key="Cosmic.TextBox" TargetType="TextBox">
         <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
         <Setter Property="FontSize" Value="13" />
@@ -366,10 +368,23 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                        <ScrollViewer x:Name="PART_ContentHost" />
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="False" />
+                            <!-- The text host adds 2 px on each side of the text -->
+                            <TextBlock x:Name="Placeholder" Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Margin="{TemplateBinding Padding}" Padding="2,0" Foreground="{StaticResource Cosmic.TextDim}"
+                                       FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}"
+                                       TextTrimming="CharacterEllipsis" IsHitTestVisible="False" Visibility="Collapsed" />
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.BorderHover}" />
+                        </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
                         </Trigger>
@@ -395,10 +410,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">
                     <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                        <ScrollViewer x:Name="PART_ContentHost" />
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="False" />
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.BorderHover}" />
+                        </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
                         </Trigger>
@@ -407,6 +425,233 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- The calendar under a date field: dark, as in the QGIS plugin. Left as is, a white
+         calendar drops out of the dark pane. -->
+    <Style x:Key="Cosmic.CalendarNav" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Face" Background="Transparent" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.HoverOverlay}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.TextFaint}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.CalendarChevron" TargetType="Path">
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Stretch" Value="Uniform" />
+        <Setter Property="StrokeThickness" Value="1.6" />
+        <Setter Property="StrokeStartLineCap" Value="Round" />
+        <Setter Property="StrokeEndLineCap" Value="Round" />
+        <Setter Property="StrokeLineJoin" Value="Round" />
+        <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+    </Style>
+    <Style x:Key="Cosmic.CalendarDayButton" TargetType="prim:CalendarDayButton">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="prim:CalendarDayButton">
+                    <Border x:Name="Face" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="6">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsInactive" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.TextFaint}" />
+                        </Trigger>
+                        <Trigger Property="IsBlackedOut" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.TextFaint}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.HoverOverlay}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.BorderHover}" />
+                        </Trigger>
+                        <Trigger Property="IsToday" Value="True">
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter Property="Foreground" Value="#04202E" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Months in the year view, years in the decade view -->
+    <Style x:Key="Cosmic.CalendarButton" TargetType="prim:CalendarButton">
+        <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Width" Value="52" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="prim:CalendarButton">
+                    <Border x:Name="Face" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="6">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsInactive" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource Cosmic.TextFaint}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.HoverOverlay}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.BorderHover}" />
+                        </Trigger>
+                        <Trigger Property="HasSelectedDays" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource Cosmic.Accent}" />
+                            <Setter Property="Foreground" Value="#04202E" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.CalendarItem" TargetType="prim:CalendarItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="prim:CalendarItem">
+                    <ControlTemplate.Resources>
+                        <DataTemplate x:Key="{x:Static prim:CalendarItem.DayTitleTemplateResourceKey}">
+                            <TextBlock Text="{Binding}" FontFamily="{StaticResource Cosmic.FontFamily}" FontSize="11"
+                                       Foreground="{StaticResource Cosmic.TextDim}" HorizontalAlignment="Center" Margin="0,6,0,4" />
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
+                    <Grid x:Name="PART_Root">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Border Background="{StaticResource Cosmic.BackgroundRaised}" BorderBrush="{StaticResource Cosmic.Border}"
+                                        BorderThickness="0,0,0,1" CornerRadius="7,7,0,0" Padding="4">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button x:Name="PART_PreviousButton" Style="{StaticResource Cosmic.CalendarNav}" Focusable="False">
+                                            <Path Data="M15 5 L8 12 L15 19" Style="{StaticResource Cosmic.CalendarChevron}" />
+                                        </Button>
+                                        <Button x:Name="PART_HeaderButton" Grid.Column="1" Style="{StaticResource Cosmic.CalendarNav}" Focusable="False"
+                                                FontWeight="SemiBold" />
+                                        <Button x:Name="PART_NextButton" Grid.Column="2" Style="{StaticResource Cosmic.CalendarNav}" Focusable="False">
+                                            <Path Data="M9 5 L16 12 L9 19" Style="{StaticResource Cosmic.CalendarChevron}" />
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                                <Grid x:Name="PART_MonthView" Grid.Row="1" Margin="6,2,6,6" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                </Grid>
+                                <Grid x:Name="PART_YearView" Grid.Row="1" Margin="6" HorizontalAlignment="Center" Visibility="Hidden">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <Rectangle x:Name="PART_DisabledVisual" Fill="#800B131A" RadiusX="8" RadiusY="8" Visibility="Collapsed" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="PART_DisabledVisual" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType=Calendar}}" Value="Year">
+                            <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType=Calendar}}" Value="Decade">
+                            <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Cosmic.Calendar" TargetType="Calendar">
+        <Setter Property="Foreground" Value="{StaticResource Cosmic.Text}" />
+        <Setter Property="Background" Value="{StaticResource Cosmic.Surface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CalendarItemStyle" Value="{StaticResource Cosmic.CalendarItem}" />
+        <Setter Property="CalendarDayButtonStyle" Value="{StaticResource Cosmic.CalendarDayButton}" />
+        <Setter Property="CalendarButtonStyle" Value="{StaticResource Cosmic.CalendarButton}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Calendar">
+                    <StackPanel x:Name="PART_Root">
+                        <prim:CalendarItem x:Name="PART_CalendarItem" Style="{TemplateBinding CalendarItemStyle}"
+                                           Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                           BorderThickness="{TemplateBinding BorderThickness}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Date field: the same frame as the inputs. The date reads yyyy-MM-dd whatever the Windows
+         locale, as in the QGIS plugin, and the whole field opens the calendar. PART_TextBox stays,
+         hidden: without it the DatePicker clears its date whenever the calendar opens. -->
     <Style x:Key="Cosmic.DatePicker" TargetType="DatePicker">
         <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
         <Setter Property="FontSize" Value="13" />
@@ -414,8 +659,59 @@
         <Setter Property="Background" Value="{StaticResource Cosmic.Surface}" />
         <Setter Property="BorderBrush" Value="{StaticResource Cosmic.Border}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Padding" Value="12,7,9,7" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="SelectedDateFormat" Value="Short" />
+        <Setter Property="CalendarStyle" Value="{StaticResource Cosmic.Calendar}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DatePicker">
+                    <Grid x:Name="PART_Root">
+                        <Button x:Name="PART_Button" Cursor="Hand" HorizontalContentAlignment="Stretch"
+                                Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}"
+                                Foreground="{TemplateBinding Foreground}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.BorderHover}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter TargetName="Face" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <DockPanel>
+                                <!-- Icons.xaml is merged by the views, not here, hence a dynamic lookup -->
+                                <Viewbox DockPanel.Dock="Right" Width="12" Height="12" Margin="7,0,0,0" VerticalAlignment="Center">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Data="{DynamicResource Icon.calendar}" Stroke="{StaticResource Cosmic.TextMuted}" StrokeThickness="1.8"
+                                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                                    </Canvas>
+                                </Viewbox>
+                                <TextBlock Text="{Binding SelectedDate, RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0:yyyy-MM-dd}}"
+                                           FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}"
+                                           Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" />
+                            </DockPanel>
+                        </Button>
+                        <prim:DatePickerTextBox x:Name="PART_TextBox" Visibility="Collapsed" />
+                        <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Bottom" VerticalOffset="4"
+                               PlacementTarget="{Binding ElementName=PART_Button}" StaysOpen="False" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="PART_Button" Property="BorderBrush" Value="{StaticResource Cosmic.Accent}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style x:Key="Cosmic.CheckBox" TargetType="CheckBox">
         <Setter Property="FontFamily" Value="{StaticResource Cosmic.FontFamily}" />
