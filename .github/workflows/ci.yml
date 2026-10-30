@@ -26,7 +26,8 @@ jobs:
       - run: uv run --no-project --with ruff==0.15.21 ruff format --check .
 
   test:
-    runs-on: ubuntu-latest
+    # ubuntu-latest (26.04) has no Python 3.9; keep testing the oldest supported Python
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         # ArcGIS Pro 3.0 ships Python 3.9 and 3.7 ships 3.13; the toolbox runs on both.
