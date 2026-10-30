@@ -158,20 +158,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid>
-                <TextBox x:Name="SearchBox" Style="{StaticResource Cosmic.TextBox}" Padding="12,7,30,7" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Search jobs — ID, type, scene, date" FontFamily="{StaticResource Cosmic.FontFamily}" FontSize="13" Foreground="{StaticResource Cosmic.TextDim}"
-                           Margin="13,8,0,0" IsHitTestVisible="False">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <TextBox x:Name="SearchBox" Style="{StaticResource Cosmic.TextBox}" Padding="12,7,30,7" Tag="Search jobs — ID, type, scene, date"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
                 <Button Content="✕" Style="{StaticResource Cosmic.GhostButton}" FontSize="11" Padding="8,0" HorizontalAlignment="Right" Command="{Binding ClearSearchCommand}"
                         Visibility="{Binding SearchActive, Converter={StaticResource BoolToVis}}" />
             </Grid>

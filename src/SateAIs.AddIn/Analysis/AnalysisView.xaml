@@ -243,20 +243,8 @@
                                 </DockPanel>
                             </Button>
                             <Grid Margin="33,2,4,6" Visibility="{Binding IsAreaOpen, Converter={StaticResource BoolToVis}}">
-                                <TextBox x:Name="PolygonEdit" Style="{StaticResource Cosmic.PolygonEdit}" Text="{Binding PolygonText, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Text="POLYGON((lon lat, ...))" FontFamily="{StaticResource Cosmic.FontFamilyMono}" FontSize="11" Foreground="{StaticResource Cosmic.TextDim}"
-                                           Margin="13,8,0,0" IsHitTestVisible="False">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Text, ElementName=PolygonEdit}" Value="">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
+                                <TextBox x:Name="PolygonEdit" Style="{StaticResource Cosmic.PolygonEdit}" Tag="POLYGON((lon lat, ...))"
+                                         Text="{Binding PolygonText, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </StackPanel>
                     </Border>
