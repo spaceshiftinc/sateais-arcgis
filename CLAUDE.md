@@ -32,6 +32,7 @@
 - ツールボックス（Python）: `pytest`、`ruff check .`、`ruff format .`
 - アドイン（C#）: `dotnet build SateAIs.sln -c Release` でパッケージまで生成、`dotnet test tests/SateAIs.Core.Tests`
 - 実機（ArcGIS Pro）での確認はプルリクエストの「確認」に書く。確認手順を頼むときは操作と期待する画面を明示する
+- 画面の確認は `scripts/gui-smoke/Invoke-GuiSmoke.ps1` で自動化できる。Pro を開いた対話セッションで実行し、結果の表とスクリーンショットを見る（Submit は押さないのでクレジットは減らない）
 - 文言は QGIS プラグインを正とし、`contract/wording-cases.json` で Python と C# の両方を固定する
 
 ## ブランチ
