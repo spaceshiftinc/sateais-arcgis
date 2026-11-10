@@ -154,7 +154,8 @@ function Run([string]$id, [string]$check, [scriptblock]$body) {
     try { & $body }
     catch {
         $where = "line $($_.InvocationInfo.ScriptLineNumber): $($_.InvocationInfo.Line.Trim())"
-        $shot = try { Shot "err_$id" ([System.Windows.Forms.Screen]::PrimaryScreen.Bounds) } catch { '' }
+        # Only the dock pane, never the whole screen: other windows may hold private content.
+        $shot = try { Shot "err_$id" $pane.Current.BoundingRectangle } catch { '' }
         Record $id $check '' $false ("error: $($_.Exception.Message) at $where") @($shot)
     }
 }
