@@ -6,6 +6,9 @@ __pycache__/
 dist/
 .DS_Store
 
+# GUI smoke test output: screenshots of the Pro window
+gui-smoke-out/
+
 # .NET
 bin/
 obj/
