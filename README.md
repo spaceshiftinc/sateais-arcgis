@@ -1,33 +1,52 @@
 # SateAIs API for ArcGIS Pro
 
 Run SateAIs satellite SAR detection from ArcGIS Pro — ship, oil slick, new
-building, disappeared building and time-series change — as ordinary
-geoprocessing tools.
+building, disappeared building and time-series change — and get the results
+back as map layers.
 
 Two surfaces share this repository:
 
-- a **Python toolbox** (`sateais_arcgis/`, `.pyt`) whose tools appear in the
-  Geoprocessing pane, chain in ModelBuilder, run as a batch over many areas and
-  can be called from the Python window — ready to use;
-- a **.NET add-in** (`src/`, `.esriAddinX`) with a dockpane that reproduces the
-  QGIS plugin's interactive workflow — in development, see
-  [docs/PORTING.md](docs/PORTING.md).
+- an **add-in** (`SateAIs.AddIn.esriAddinX`) that adds a SateAIs panel to
+  ArcGIS Pro: choose a detection, draw the area on the map, check the estimated
+  cost, submit, and load the result from the Jobs tab — the same workflow as
+  the [QGIS plugin](https://github.com/spaceshiftinc/sateais-qgis);
+- a **Python toolbox** (`SateAIs.pyt`) whose tools appear in the Geoprocessing
+  pane, chain in ModelBuilder, run as a batch over many areas and can be called
+  from the Python window.
 
 ## Requirements
 
-- ArcGIS Pro 3.x (Windows)
+- ArcGIS Pro 3.3 or later for the add-in, 3.0 or later for the toolbox (Windows)
 - A SateAIs API key — create one in the [console](https://console.spcsft.com)
   under **Settings > API Keys**
 
-**No extra Python packages are needed.** ArcGIS Pro's default `arcgispro-py3`
+## Install the add-in
+
+1. Download `SateAIs.AddIn.esriAddinX` from the
+   [latest release](https://github.com/spaceshiftinc/sateais-arcgis/releases/latest).
+2. Double-click it. The ArcGIS Add-In Installation Utility opens; choose
+   **Install Add-In**. It installs for your user only, so no administrator
+   rights are needed.
+3. Start ArcGIS Pro. Open the **SateAIs** tab on the ribbon, press
+   **Settings**, paste your API key and press **Test Connection**.
+4. Press **SateAIs** on the same tab to open the panel.
+
+The add-in is not code-signed, so the installer says the file is not digitally
+signed. ArcGIS Pro loads unsigned add-ins with its default settings. If your
+organization allows only signed add-ins, ask your administrator.
+
+**To update**, close ArcGIS Pro, double-click the new file and start Pro again.
+**To remove it**, open **Project > Add-In Manager**, select SateAIs and delete it.
+
+## Install the Python toolbox
+
+No extra Python packages are needed. ArcGIS Pro's default `arcgispro-py3`
 environment is read-only, so the toolbox uses only the standard library and
 `arcpy`. You never have to clone the conda environment.
 
-## Install
-
-1. Download the latest zip from
-   [Releases](https://github.com/spaceshiftinc/sateais-arcgis/releases) and
-   extract it anywhere.
+1. Download `sateais-arcgis-<version>.zip` from the
+   [latest release](https://github.com/spaceshiftinc/sateais-arcgis/releases/latest)
+   and extract it anywhere.
 2. In ArcGIS Pro, open the **Catalog** pane, right-click **Toolboxes** >
    **Add Toolbox**, and pick `sateais_arcgis/esri/toolboxes/SateAIs.pyt`.
 3. Right-click the toolbox > **Add To New Projects** so it is there next time.
@@ -37,7 +56,7 @@ Then run **1 Setup > Configure Account** once to store your API key.
 To update, extract the new zip over the old folder and **restart ArcGIS Pro**;
 it keeps the previous version's modules loaded until then.
 
-## Tools
+## Toolbox tools
 
 | Category | Tool | What it does |
 |---|---|---|
@@ -60,9 +79,9 @@ many areas; load the result later with `Download Result`.
   no setting for this.
 - Results expire a while after the job completes. Save anything you need to
   keep.
-- The API key is resolved in this order: tool parameter, OS credential store,
-  `SATEAIS_API_KEY`, then `~/.sateais/credentials` (shared with the `sateais`
-  CLI).
+- The API key is resolved in this order: tool parameter (toolbox only), the
+  Windows Credential Manager, `SATEAIS_API_KEY`, then `~/.sateais/credentials`
+  (shared with the `sateais` CLI).
 
 ## Development
 
