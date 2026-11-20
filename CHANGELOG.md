@@ -13,10 +13,8 @@ First public release.
 - **ArcGIS Pro add-in** (`SateAIs.AddIn.esriAddinX`, ArcGIS Pro 3.3 or later).
   A SateAIs tab on the ribbon opens a panel where you choose a detection,
   draw the area on the map, check the estimated cost and coverage, and submit.
-  The Jobs tab follows each job, and a completed result loads as map layers.
-- **Python toolbox** (`SateAIs.pyt`, ArcGIS Pro 3.0 or later) for ModelBuilder,
-  batch runs and the Python window: Configure Account, Run Detection,
-  Download Result and List Jobs.
+  The Jobs tab follows each job, and a completed result loads as map layers
+  saved in the project's default geodatabase.
 - Detections: ship, oil slick, new building, disappeared building and
   time-series change.
 - The API key is kept in the Windows Credential Manager. The `SATEAIS_API_KEY`
